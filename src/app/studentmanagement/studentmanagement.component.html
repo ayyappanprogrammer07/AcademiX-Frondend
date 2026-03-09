@@ -1,0 +1,587 @@
+<div class="page-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Student Management</h1>
+      <p class="page-subtitle">Manage all student records</p>
+    </div>
+    <button class="btn-primary" (click)="openAddStudent()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add Student
+    </button>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon purple">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">1,240</span>
+        <span class="stat-label">Total Students</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">1,198</span>
+        <span class="stat-label">Active</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">680</span>
+        <span class="stat-label">Boys</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon pink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">560</span>
+        <span class="stat-label">Girls</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">42</span>
+        <span class="stat-label">New This Month</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Row -->
+  <div class="filter-row">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Search by name or roll no..." [(ngModel)]="searchTerm" (input)="filterStudents()"/>
+    </div>
+    <select class="filter-select" [(ngModel)]="selectedDegree" (change)="filterStudents()">
+      <option value="">All Degrees</option>
+      <option value="BE">BE</option>
+      <option value="BSc">BSc</option>
+      <option value="MSc">MSc</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedDepartment" (change)="filterStudents()">
+      <option value="">All Departments</option>
+      <option value="CS">Computer Science</option>
+      <option value="Mechanical">Mechanical</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedYear" (change)="filterStudents()">
+      <option value="">All Years</option>
+      <option value="1">Year 1</option>
+      <option value="2">Year 2</option>
+      <option value="3">Year 3</option>
+      <option value="4">Year 4</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedSection" (change)="filterStudents()">
+      <option value="">All Classes</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="D">D</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedGender" (change)="filterStudents()">
+      <option value="">All Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table class="student-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Roll No</th>
+          <th>Class</th>
+          <th>Gender</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of filteredStudents; let i = index">
+          <td class="row-num">{{ i + 1 }}</td>
+          <td>
+            <div class="student-info">
+              <div class="avatar" [style.background]="getAvatarColor(student.name)">
+                {{ student.name.charAt(0) }}
+              </div>
+              <div>
+                <span class="student-name">{{ student.name }}</span>
+                <span class="student-email">{{ student.email }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="roll-no">{{ student.rollNo }}</td>
+          <td>{{ student.class }} - {{ student.section }}</td>
+          <td>{{ student.gender }}</td>
+          <td>{{ student.phone }}</td>
+          <td>
+            <span class="badge" [class.active]="student.status === 'Active'" [class.inactive]="student.status === 'Inactive'">
+              {{ student.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="icon-btn view" (click)="viewStudent(student)" title="View">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="icon-btn edit" (click)="editStudent(student)" title="Edit">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
+      <div class="page-btns">
+        <button class="page-btn">Previous</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">Next</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- Add / Edit Student Modal                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ isEditing ? 'Edit Student' : 'Add New Student' }}</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-steps">
+      <div class="modal-step" *ngFor="let step of modalSteps; let i = index"
+           [class.active]="modalStep === i"
+           [class.done]="modalStep > i"
+           (click)="modalStep = i">
+        <div class="mstep-circle">
+          <svg *ngIf="modalStep > i" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span *ngIf="modalStep <= i">{{ i + 1 }}</span>
+        </div>
+        <span class="mstep-label">{{ step }}</span>
+      </div>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Step 1: Personal Information -->
+      <div *ngIf="modalStep === 0">
+        <p class="section-title">Personal Information</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Student ID / Reg No <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. STU2024001" [(ngModel)]="formData.studentId"/>
+          </div>
+          <div class="form-field">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" placeholder="First name" [(ngModel)]="formData.firstName"/>
+          </div>
+          <div class="form-field">
+            <label>Middle Name</label>
+            <input type="text" placeholder="Middle name (optional)" [(ngModel)]="formData.middleName"/>
+          </div>
+          <div class="form-field">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" placeholder="Last name" [(ngModel)]="formData.lastName"/>
+          </div>
+          <div class="form-field">
+            <label>Gender <span class="req">*</span></label>
+            <select [(ngModel)]="formData.gender">
+              <option value="">Select gender</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Date of Birth <span class="req">*</span></label>
+            <input type="date" [(ngModel)]="formData.dob" (change)="calcAge()"/>
+          </div>
+          <div class="form-field">
+            <label>Age (Auto-calculated)</label>
+            <input type="text" [value]="formData.age || ''" placeholder="Auto from DOB" readonly class="readonly-field"/>
+          </div>
+          <div class="form-field">
+            <label>Blood Group</label>
+            <select [(ngModel)]="formData.bloodGroup">
+              <option value="">Select</option>
+              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+              <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Nationality</label>
+            <input type="text" placeholder="e.g. Indian" [(ngModel)]="formData.nationality"/>
+          </div>
+          <div class="form-field">
+            <label>Category / Community</label>
+            <select [(ngModel)]="formData.category">
+              <option value="">Select</option>
+              <option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Contact Information -->
+      <div *ngIf="modalStep === 1">
+        <p class="section-title">Contact Information</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Mobile Number <span class="req">*</span></label>
+            <input type="text" placeholder="Mobile number" [(ngModel)]="formData.mobile"/>
+          </div>
+          <div class="form-field">
+            <label>Alternate Mobile</label>
+            <input type="text" placeholder="Alternate number" [(ngModel)]="formData.alternateMobile"/>
+          </div>
+          <div class="form-field">
+            <label>Email Address</label>
+            <input type="email" placeholder="Email address" [(ngModel)]="formData.email"/>
+          </div>
+          <div class="form-field">
+            <label>Address Line 1 <span class="req">*</span></label>
+            <input type="text" placeholder="Door No, Street" [(ngModel)]="formData.address1"/>
+          </div>
+          <div class="form-field">
+            <label>Address Line 2</label>
+            <input type="text" placeholder="Area, Landmark" [(ngModel)]="formData.address2"/>
+          </div>
+          <div class="form-field">
+            <label>City <span class="req">*</span></label>
+            <input type="text" placeholder="City" [(ngModel)]="formData.city"/>
+          </div>
+          <div class="form-field">
+            <label>State <span class="req">*</span></label>
+            <input type="text" placeholder="State" [(ngModel)]="formData.state"/>
+          </div>
+          <div class="form-field">
+            <label>Country</label>
+            <input type="text" placeholder="Country" [(ngModel)]="formData.country"/>
+          </div>
+          <div class="form-field">
+            <label>Postal Code</label>
+            <input type="text" placeholder="Postal code" [(ngModel)]="formData.postalCode"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Parent / Guardian -->
+      <div *ngIf="modalStep === 2">
+        <p class="section-title">Father's Information</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Father's Name <span class="req">*</span></label>
+            <input type="text" placeholder="Father's name" [(ngModel)]="formData.fatherName"/>
+          </div>
+          <div class="form-field">
+            <label>Father's Mobile <span class="req">*</span></label>
+            <input type="text" placeholder="Father's mobile" [(ngModel)]="formData.fatherMobile"/>
+          </div>
+        </div>
+        <p class="section-title" style="margin-top:18px">Mother's Information</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Mother's Name <span class="req">*</span></label>
+            <input type="text" placeholder="Mother's name" [(ngModel)]="formData.motherName"/>
+          </div>
+          <div class="form-field">
+            <label>Mother's Mobile</label>
+            <input type="text" placeholder="Mother's mobile" [(ngModel)]="formData.motherMobile"/>
+          </div>
+        </div>
+        <p class="section-title" style="margin-top:18px">Guardian Information</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Guardian Name</label>
+            <input type="text" placeholder="Guardian name" [(ngModel)]="formData.guardianName"/>
+          </div>
+          <div class="form-field">
+            <label>Guardian Phone</label>
+            <input type="text" placeholder="Guardian phone" [(ngModel)]="formData.guardianPhone"/>
+          </div>
+          <div class="form-field">
+            <label>Relationship</label>
+            <select [(ngModel)]="formData.guardianRelation">
+              <option value="">Select</option>
+              <option>Uncle</option><option>Aunt</option><option>Grandparent</option>
+              <option>Sibling</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Academic Details -->
+      <div *ngIf="modalStep === 3">
+        <p class="section-title">Academic Details</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Course / Program <span class="req">*</span></label>
+             <select [(ngModel)]="formData.department">
+              <option value="">BE</option>
+              <option>ME</option><option>Electronics</option>
+              <option>B.sc</option><option>Civil</option>
+              <option>Bca</option><option>Physics</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Department <span class="req">*</span></label>
+            <select [(ngModel)]="formData.department">
+              <option value="">Select department</option>
+              <option>Computer Science</option><option>Electronics</option>
+              <option>Mechanical</option><option>Civil</option>
+              <option>Mathematics</option><option>Physics</option>
+            </select>
+          </div>
+  
+          <div class="form-field">
+            <label>Year / Semester <span class="req">*</span></label>
+            <select [(ngModel)]="formData.yearSemester">
+              <option value="">Select</option>
+              <option>1st Year - Sem 1</option><option>1st Year - Sem 2</option>
+              <option>2nd Year - Sem 3</option><option>2nd Year - Sem 4</option>
+              <option>3rd Year - Sem 5</option><option>3rd Year - Sem 6</option>
+              <option>4th Year - Sem 7</option><option>4th Year - Sem 8</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Section</label>
+            <select [(ngModel)]="formData.section">
+              <option value="">Select</option>
+              <option>A</option><option>B</option><option>C</option><option>D</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Roll No</label>
+            <input type="text" placeholder="Roll number" [(ngModel)]="formData.rollNo"/>
+          </div>
+          <div class="form-field">
+            <label>Admission Date <span class="req">*</span></label>
+            <input type="date" [(ngModel)]="formData.admissionDate"/>
+          </div>
+          <div class="form-field">
+            <label>Admission Type <span class="req">*</span></label>
+            <select [(ngModel)]="formData.admissionType">
+              <option value="">Select type</option>
+              <option>Regular</option><option>Lateral Entry</option><option>Transfer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Identification & Previous Education -->
+      <div *ngIf="modalStep === 4">
+        <p class="section-title">Identification Details</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Aadhaar Number</label>
+            <input type="text" placeholder="XXXX XXXX XXXX" [(ngModel)]="formData.aadhaar" maxlength="14"/>
+          </div>
+          <div class="form-field">
+            <label>Passport Number</label>
+            <input type="text" placeholder="Optional" [(ngModel)]="formData.passport"/>
+          </div>
+          <div class="form-field">
+            <label>Govt ID Type</label>
+            <select [(ngModel)]="formData.govtIdType">
+              <option value="">Select</option>
+              <option>Voter ID</option><option>Driving License</option>
+              <option>PAN Card</option><option>Ration Card</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Govt ID Number</label>
+            <input type="text" placeholder="ID number" [(ngModel)]="formData.govtIdNumber"/>
+          </div>
+        </div>
+        <p class="section-title" style="margin-top:18px">Previous Education</p>
+        <div class="form-grid1">
+          <h6 style="margin-top: 18px;margin-bottom: 4px;">SSLC</h6>
+          <div class="form-grid">
+          <div class="form-field">
+            <label>Previous School</label>
+            <input type="text" placeholder="School name" [(ngModel)]="formData.prevInstitution"/>
+          </div>
+          <div class="form-field">
+            <label>Board </label>
+            <input type="text" placeholder="e.g. CBSE, State Board" [(ngModel)]="formData.board"/>
+          </div>
+          <div class="form-field">
+            <label>Year of Passing</label>
+            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
+          </div>
+          <div class="form-field">
+            <label>Percentage / CGPA</label>
+            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
+          </div>
+         </div>
+         <h6 style="margin-top: 18px;margin-bottom: 4px;">HSC</h6>
+          <div class="form-grid">
+          <div class="form-field">
+            <label>Previous School</label>
+            <input type="text" placeholder="School name" [(ngModel)]="formData.prevInstitution"/>
+          </div>
+          <div class="form-field">
+            <label>Board</label>
+            <input type="text" placeholder="e.g. CBSE, State Board" [(ngModel)]="formData.board"/>
+          </div>
+          <div class="form-field">
+            <label>Year of Passing</label>
+            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
+          </div>
+          <div class="form-field">
+            <label>Percentage / CGPA</label>
+            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
+          </div>
+         </div>
+         <h6 style="margin-top: 18px;margin-bottom: 4px;">Previous Degree</h6>
+          <div class="form-grid">
+            <div class="form-field">
+            <label>Degree</label>
+            <input type="text" placeholder="College name" [(ngModel)]="formData.prevInstitution"/>
+          </div>
+          <div class="form-field">
+            <label>Department</label>
+            <input type="text" placeholder="Anna University" [(ngModel)]="formData.board"/>
+          </div>
+          <div class="form-field">
+            <label>Previous Institution</label>
+            <input type="text" placeholder="College name" [(ngModel)]="formData.prevInstitution"/>
+          </div>
+          <div class="form-field">
+            <label>University</label>
+            <input type="text" placeholder="Anna University" [(ngModel)]="formData.board"/>
+          </div>
+          <div class="form-field">
+            <label>Year of Passing</label>
+            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
+          </div>
+          <div class="form-field">
+            <label>Percentage / CGPA</label>
+            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
+          </div>
+         </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1">← Previous</button>
+      <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+      <div style="flex:1"></div>
+      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1">Next →</button>
+      <button class="btn-primary" *ngIf="modalStep === modalSteps.length - 1" (click)="saveStudent()">
+        {{ isEditing ? 'Update Student' : 'Add Student' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- View Student Modal                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showViewModal" (click)="closeViewModal()">
+  <div class="modal view-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Student Profile</h2>
+      <button class="modal-close" (click)="closeViewModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="selectedStudent">
+      <div class="profile-header">
+        <div class="profile-avatar" [style.background]="getAvatarColor(selectedStudent!.name)">
+          {{ selectedStudent!.name.charAt(0) }}
+        </div>
+        <div class="profile-info">
+          <h3>{{ selectedStudent!.name }}</h3>
+          <p>{{ selectedStudent!.email }}</p>
+          <span class="badge" [class.active]="selectedStudent!.status === 'Active'">{{ selectedStudent!.status }}</span>
+        </div>
+      </div>
+      <div class="profile-grid">
+        <div class="profile-item"><span class="label">Roll No</span><span class="value">{{ selectedStudent!.rollNo }}</span></div>
+        <div class="profile-item"><span class="label">Class</span><span class="value">{{ selectedStudent!.class }} - {{ selectedStudent!.section }}</span></div>
+        <div class="profile-item"><span class="label">Gender</span><span class="value">{{ selectedStudent!.gender }}</span></div>
+        <div class="profile-item"><span class="label">Phone</span><span class="value">{{ selectedStudent!.phone }}</span></div>
+        <div class="profile-item"><span class="label">Blood Group</span><span class="value">{{ selectedStudent!.bloodGroup }}</span></div>
+        <div class="profile-item"><span class="label">Father</span><span class="value">{{ selectedStudent!.fatherName }}</span></div>
+        <div class="profile-item"><span class="label">Mother</span><span class="value">{{ selectedStudent!.motherName }}</span></div>
+        <div class="profile-item"><span class="label">Parent Phone</span><span class="value">{{ selectedStudent!.parentPhone }}</span></div>
+      </div>
+      <div class="summary-cards">
+        <div class="summary-card">
+          <span class="summary-value green">92%</span>
+          <span class="summary-label">Attendance</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value purple">78%</span>
+          <span class="summary-label">Avg Marks</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value orange">₹2,400</span>
+          <span class="summary-label">Fee Pending</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
