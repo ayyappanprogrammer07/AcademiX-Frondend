@@ -208,7 +208,7 @@
       <div class="modal-step" *ngFor="let step of modalSteps; let i = index"
            [class.active]="modalStep === i"
            [class.done]="modalStep > i"
-           (click)="modalStep = i">
+           (click)="modalStep = i;onStepClick(i)">
         <div class="mstep-circle">
           <svg *ngIf="modalStep > i" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"/>
@@ -219,7 +219,8 @@
       </div>
     </div>
 
-    <div class="modal-body">
+    <!-- ✅ formGroup on <form> tag, NOT on <div> -->
+    <form class="modal-body" [formGroup]="form">
 
       <!-- Step 1: Personal Information -->
       <div *ngIf="modalStep === 0">
@@ -227,38 +228,43 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Student ID / Reg No <span class="req">*</span></label>
-            <input type="text" placeholder="e.g. STU2024001" [(ngModel)]="formData.studentId"/>
+            <input type="text" placeholder="e.g. STU2024001" formControlName="studentId"/>
+            <small class="error" *ngIf="form.get('studentId')?.invalid && form.get('studentId')?.touched">Student ID is required.</small>
           </div>
           <div class="form-field">
             <label>First Name <span class="req">*</span></label>
-            <input type="text" placeholder="First name" [(ngModel)]="formData.firstName"/>
+            <input type="text" placeholder="First name" formControlName="Firstname"/>
+            <small class="error" *ngIf="form.get('Firstname')?.invalid && form.get('Firstname')?.touched">First name is required.</small>
           </div>
           <div class="form-field">
             <label>Middle Name</label>
-            <input type="text" placeholder="Middle name (optional)" [(ngModel)]="formData.middleName"/>
+            <input type="text" placeholder="Middle name (optional)" formControlName="middlename"/>
           </div>
           <div class="form-field">
             <label>Last Name <span class="req">*</span></label>
-            <input type="text" placeholder="Last name" [(ngModel)]="formData.lastName"/>
+            <input type="text" placeholder="Last name" formControlName="lastname"/>
+            <small class="error" *ngIf="form.get('lastname')?.invalid && form.get('lastname')?.touched">Last name is required.</small>
           </div>
           <div class="form-field">
             <label>Gender <span class="req">*</span></label>
-            <select [(ngModel)]="formData.gender">
+            <select formControlName="gender">
               <option value="">Select gender</option>
               <option>Male</option><option>Female</option><option>Other</option>
             </select>
+            <small class="error" *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched">Gender is required.</small>
           </div>
           <div class="form-field">
             <label>Date of Birth <span class="req">*</span></label>
-            <input type="date" [(ngModel)]="formData.dob" (change)="calcAge()"/>
+            <input type="date" formControlName="DOB" (change)="calcAge()"/>
+            <small class="error" *ngIf="form.get('DOB')?.invalid && form.get('DOB')?.touched">Date of birth is required.</small>
           </div>
           <div class="form-field">
             <label>Age (Auto-calculated)</label>
-            <input type="text" [value]="formData.age || ''" placeholder="Auto from DOB" readonly class="readonly-field"/>
+            <input type="text" formControlName="age" placeholder="Auto from DOB" readonly class="readonly-field"/>
           </div>
           <div class="form-field">
             <label>Blood Group</label>
-            <select [(ngModel)]="formData.bloodGroup">
+            <select formControlName="bloodgroup">
               <option value="">Select</option>
               <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
               <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
@@ -266,11 +272,14 @@
           </div>
           <div class="form-field">
             <label>Nationality</label>
-            <input type="text" placeholder="e.g. Indian" [(ngModel)]="formData.nationality"/>
+             <select formControlName="nationality">
+              <option value="">Select</option>
+              <option>Indian</option>
+            </select>
           </div>
           <div class="form-field">
             <label>Category / Community</label>
-            <select [(ngModel)]="formData.category">
+            <select formControlName="Community">
               <option value="">Select</option>
               <option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option>
             </select>
@@ -284,39 +293,43 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Mobile Number <span class="req">*</span></label>
-            <input type="text" placeholder="Mobile number" [(ngModel)]="formData.mobile"/>
+            <input type="text" placeholder="Mobile number" formControlName="mobileno"/>
+            <small class="error" *ngIf="form.get('mobileno')?.invalid && form.get('mobileno')?.touched">Mobile number is required.</small>
           </div>
           <div class="form-field">
             <label>Alternate Mobile</label>
-            <input type="text" placeholder="Alternate number" [(ngModel)]="formData.alternateMobile"/>
+            <input type="text" placeholder="Alternate number" formControlName="alternativemobileno" />
           </div>
           <div class="form-field">
             <label>Email Address</label>
-            <input type="email" placeholder="Email address" [(ngModel)]="formData.email"/>
+            <input type="email" placeholder="Email address" formControlName="emailaddress"/>
           </div>
           <div class="form-field">
             <label>Address Line 1 <span class="req">*</span></label>
-            <input type="text" placeholder="Door No, Street" [(ngModel)]="formData.address1"/>
+            <input type="text" placeholder="Door No, Street" formControlName="addressline1"/>
+            <small class="error" *ngIf="form.get('addressline1')?.invalid && form.get('addressline1')?.touched">Address is required.</small>
           </div>
           <div class="form-field">
             <label>Address Line 2</label>
-            <input type="text" placeholder="Area, Landmark" [(ngModel)]="formData.address2"/>
+            <input type="text" placeholder="Area, Landmark" formControlName="addressline2"/>
           </div>
           <div class="form-field">
             <label>City <span class="req">*</span></label>
-            <input type="text" placeholder="City" [(ngModel)]="formData.city"/>
+            <input type="text" placeholder="City" formControlName="city"/>
+            <small class="error" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">City is required.</small>
           </div>
           <div class="form-field">
             <label>State <span class="req">*</span></label>
-            <input type="text" placeholder="State" [(ngModel)]="formData.state"/>
+            <input type="text" placeholder="State" formControlName="state"/>
+            <small class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">State is required.</small>
           </div>
           <div class="form-field">
             <label>Country</label>
-            <input type="text" placeholder="Country" [(ngModel)]="formData.country"/>
+            <input type="text" placeholder="Country" formControlName="Country"/>
           </div>
           <div class="form-field">
             <label>Postal Code</label>
-            <input type="text" placeholder="Postal code" [(ngModel)]="formData.postalCode"/>
+            <input type="text" placeholder="Postal code" formControlName="PostalCode"/>
           </div>
         </div>
       </div>
@@ -327,37 +340,40 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Father's Name <span class="req">*</span></label>
-            <input type="text" placeholder="Father's name" [(ngModel)]="formData.fatherName"/>
+            <input type="text" placeholder="Father's name" formControlName="fathersname"/>
+            <small class="error" *ngIf="form.get('fathersname')?.invalid && form.get('fathersname')?.touched">Father's name is required.</small>
           </div>
           <div class="form-field">
-            <label>Father's Mobile <span class="req">*</span></label>
-            <input type="text" placeholder="Father's mobile" [(ngModel)]="formData.fatherMobile"/>
+            <label>Father's Mobile</label>
+            <input type="text" placeholder="Father's mobile" formControlName="fathersmobileno"/>
+            <small class="error" *ngIf="form.get('fathersmobileno')?.invalid && form.get('fathersmobileno')?.touched">Father's mobile is required.</small>
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Mother's Information</p>
         <div class="form-grid">
           <div class="form-field">
             <label>Mother's Name <span class="req">*</span></label>
-            <input type="text" placeholder="Mother's name" [(ngModel)]="formData.motherName"/>
+            <input type="text" placeholder="Mother's name" formControlName="mothersname"/>
+            <small class="error" *ngIf="form.get('mothersname')?.invalid && form.get('mothersname')?.touched">Mother's name is required.</small>
           </div>
           <div class="form-field">
             <label>Mother's Mobile</label>
-            <input type="text" placeholder="Mother's mobile" [(ngModel)]="formData.motherMobile"/>
+            <input type="text" placeholder="Mother's mobile" formControlName="mothersmobileno" />
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Guardian Information</p>
         <div class="form-grid">
           <div class="form-field">
             <label>Guardian Name</label>
-            <input type="text" placeholder="Guardian name" [(ngModel)]="formData.guardianName"/>
+            <input type="text" placeholder="Guardian name" formControlName="guardianname"/>
           </div>
           <div class="form-field">
             <label>Guardian Phone</label>
-            <input type="text" placeholder="Guardian phone" [(ngModel)]="formData.guardianPhone"/>
+            <input type="text" placeholder="Guardian phone" formControlName="guardianno"/>
           </div>
           <div class="form-field">
             <label>Relationship</label>
-            <select [(ngModel)]="formData.guardianRelation">
+            <select formControlName="relationship">
               <option value="">Select</option>
               <option>Uncle</option><option>Aunt</option><option>Grandparent</option>
               <option>Sibling</option><option>Other</option>
@@ -372,54 +388,70 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Course / Program <span class="req">*</span></label>
-             <select [(ngModel)]="formData.department">
-              <option value="">BE</option>
-              <option>ME</option><option>Electronics</option>
-              <option>B.sc</option><option>Civil</option>
-              <option>Bca</option><option>Physics</option>
+            <select formControlName="course">
+              <option value="">Select course</option>
+               <option *ngFor="let c of courses" [value]="c.courseid">
+                  {{ c.coursename }}
+               </option>
+
             </select>
+            <small class="error" *ngIf="form.get('course')?.invalid && form.get('course')?.touched">Course is required.</small>
           </div>
           <div class="form-field">
             <label>Department <span class="req">*</span></label>
-            <select [(ngModel)]="formData.department">
+            <select formControlName="dept">
               <option value="">Select department</option>
               <option>Computer Science</option><option>Electronics</option>
               <option>Mechanical</option><option>Civil</option>
               <option>Mathematics</option><option>Physics</option>
             </select>
+            <small class="error" *ngIf="form.get('dept')?.invalid && form.get('dept')?.touched">Department is required.</small>
           </div>
-  
           <div class="form-field">
-            <label>Year / Semester <span class="req">*</span></label>
-            <select [(ngModel)]="formData.yearSemester">
+            <label>Year<span class="req">*</span></label>
+            <select formControlName="year">
               <option value="">Select</option>
-              <option>1st Year - Sem 1</option><option>1st Year - Sem 2</option>
-              <option>2nd Year - Sem 3</option><option>2nd Year - Sem 4</option>
-              <option>3rd Year - Sem 5</option><option>3rd Year - Sem 6</option>
-              <option>4th Year - Sem 7</option><option>4th Year - Sem 8</option>
+              <option>1st Year</option><option>1st Year </option>
+              <option>2nd Year</option><option>2nd Year </option>
+              <option>3rd Year</option><option>3rd Year </option>
+              <option>4th Year</option><option>4th Year </option>
             </select>
+            <small class="error" *ngIf="form.get('year')?.invalid && form.get('year')?.touched">Year is required.</small>
+          </div>
+           <div class="form-field">
+            <label>Semester <span class="req">*</span></label>
+            <select formControlName="semester">
+              <option value="">Select</option>
+              <option>Sem 1</option><option>Sem 2</option>
+              <option>Sem 3</option><option>Sem 4</option>
+              <option>Sem 5</option><option>Sem 6</option>
+              <option>Sem 7</option><option>Sem 8</option>
+            </select>
+            <small class="error" *ngIf="form.get('semester')?.invalid && form.get('semester')?.touched">Semester is required.</small>
           </div>
           <div class="form-field">
             <label>Section</label>
-            <select [(ngModel)]="formData.section">
+            <select formControlName="section">
               <option value="">Select</option>
               <option>A</option><option>B</option><option>C</option><option>D</option>
             </select>
           </div>
           <div class="form-field">
             <label>Roll No</label>
-            <input type="text" placeholder="Roll number" [(ngModel)]="formData.rollNo"/>
+            <input type="text" placeholder="Roll number" formControlName="rollno"/>
           </div>
           <div class="form-field">
             <label>Admission Date <span class="req">*</span></label>
-            <input type="date" [(ngModel)]="formData.admissionDate"/>
+            <input type="date" formControlName="admisiondate"/>
+            <small class="error" *ngIf="form.get('admisiondate')?.invalid && form.get('admisiondate')?.touched">Admission date is required.</small>
           </div>
           <div class="form-field">
             <label>Admission Type <span class="req">*</span></label>
-            <select [(ngModel)]="formData.admissionType">
+            <select formControlName="admissontype">
               <option value="">Select type</option>
               <option>Regular</option><option>Lateral Entry</option><option>Transfer</option>
             </select>
+            <small class="error" *ngIf="form.get('admissontype')?.invalid && form.get('admissontype')?.touched">Admission type is required.</small>
           </div>
         </div>
       </div>
@@ -430,15 +462,15 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Aadhaar Number</label>
-            <input type="text" placeholder="XXXX XXXX XXXX" [(ngModel)]="formData.aadhaar" maxlength="14"/>
+            <input type="text" placeholder="XXXX XXXX XXXX" formControlName="AadhaarNumber" maxlength="14"/>
           </div>
           <div class="form-field">
             <label>Passport Number</label>
-            <input type="text" placeholder="Optional" [(ngModel)]="formData.passport"/>
+            <input type="text" placeholder="Optional"  formControlName="PassportNumber"/>
           </div>
           <div class="form-field">
             <label>Govt ID Type</label>
-            <select [(ngModel)]="formData.govtIdType">
+            <select formControlName="GovtIDType">
               <option value="">Select</option>
               <option>Voter ID</option><option>Driving License</option>
               <option>PAN Card</option><option>Ration Card</option>
@@ -446,87 +478,101 @@
           </div>
           <div class="form-field">
             <label>Govt ID Number</label>
-            <input type="text" placeholder="ID number" [(ngModel)]="formData.govtIdNumber"/>
+            <input type="text" placeholder="ID number"  formControlName="GovtIDNumber"/>
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Previous Education</p>
         <div class="form-grid1">
-          <h6 style="margin-top: 18px;margin-bottom: 4px;">SSLC</h6>
-          <div class="form-grid">
-          <div class="form-field">
-            <label>Previous School</label>
-            <input type="text" placeholder="School name" [(ngModel)]="formData.prevInstitution"/>
-          </div>
-          <div class="form-field">
-            <label>Board </label>
-            <input type="text" placeholder="e.g. CBSE, State Board" [(ngModel)]="formData.board"/>
-          </div>
-          <div class="form-field">
-            <label>Year of Passing</label>
-            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
-          </div>
-          <div class="form-field">
-            <label>Percentage / CGPA</label>
-            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
-          </div>
-         </div>
-         <h6 style="margin-top: 18px;margin-bottom: 4px;">HSC</h6>
-          <div class="form-grid">
-          <div class="form-field">
-            <label>Previous School</label>
-            <input type="text" placeholder="School name" [(ngModel)]="formData.prevInstitution"/>
-          </div>
-          <div class="form-field">
-            <label>Board</label>
-            <input type="text" placeholder="e.g. CBSE, State Board" [(ngModel)]="formData.board"/>
-          </div>
-          <div class="form-field">
-            <label>Year of Passing</label>
-            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
-          </div>
-          <div class="form-field">
-            <label>Percentage / CGPA</label>
-            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
-          </div>
-         </div>
-         <h6 style="margin-top: 18px;margin-bottom: 4px;">Previous Degree</h6>
+          <h6 style="margin-top:18px;margin-bottom:4px;">SSLC</h6>
           <div class="form-grid">
             <div class="form-field">
-            <label>Degree</label>
-            <input type="text" placeholder="College name" [(ngModel)]="formData.prevInstitution"/>
+              <label>Previous School<span class="req">*</span></label>
+              <input type="text" placeholder="School name" formControlName="PreviousSchoolofsslc"/>
+             <small class="error" *ngIf="form.get('PreviousSchoolofsslc')?.invalid && form.get('PreviousSchoolofsslc')?.touched">School name is required.</small>
+            </div>
+            <div class="form-field">
+              <label>Board<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. CBSE, State Board" formControlName="Boardofsslc"/>
+              <small class="error" *ngIf="form.get('Boardofsslc')?.invalid && form.get('Boardofsslc')?.touched">Board is required.</small>
+
+            </div>
+            <div class="form-field">
+              <label>Year of Passing<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. 2023" formControlName="YearofPassingofsslc"/>
+              <small class="error" *ngIf="form.get('YearofPassingofsslc')?.invalid && form.get('YearofPassingofsslc')?.touched">Year of Passing is required.</small>
+
+            </div>
+            <div class="form-field">
+              <label>Percentage / CGPA<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. 85% or 8.5" formControlName="PercentageCGPAofsslc"/>
+              <small class="error" *ngIf="form.get('PercentageCGPAofsslc')?.invalid && form.get('PercentageCGPAofsslc')?.touched">Percentage is required.</small>
+
+            </div>
           </div>
-          <div class="form-field">
-            <label>Department</label>
-            <input type="text" placeholder="Anna University" [(ngModel)]="formData.board"/>
+          <h6 style="margin-top:18px;margin-bottom:4px;">HSC</h6>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Previous School<span class="req">*</span></label>
+              <input type="text" placeholder="School name" formControlName="PreviousSchoolofhsc"/>
+              <small class="error" *ngIf="form.get('PreviousSchoolofhsc')?.invalid && form.get('PreviousSchoolofhsc')?.touched">School name is required.</small>
+
+            </div>
+            <div class="form-field">
+              <label>Board<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. CBSE, State Board" formControlName="Boardofhsc"/>
+              <small class="error" *ngIf="form.get('Boardofhsc')?.invalid && form.get('Boardofhsc')?.touched">Board is required.</small>
+
+            </div>
+            <div class="form-field">
+              <label>Year of Passing<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. 2023" formControlName="YearofPassingofhsc"/>
+              <small class="error" *ngIf="form.get('YearofPassingofhsc')?.invalid && form.get('YearofPassingofhsc')?.touched">Year of Passing is required.</small>
+
+            </div>
+            <div class="form-field">
+              <label>Percentage / CGPA<span class="req">*</span></label>
+              <input type="text" placeholder="e.g. 85% or 8.5" formControlName="PercentageCGPAofhsc"/>
+              <small class="error" *ngIf="form.get('PercentageCGPAofhsc')?.invalid && form.get('PercentageCGPAofhsc')?.touched">Percentage is required.</small>
+            </div>
           </div>
-          <div class="form-field">
-            <label>Previous Institution</label>
-            <input type="text" placeholder="College name" [(ngModel)]="formData.prevInstitution"/>
+          <h6 style="margin-top:18px;margin-bottom:4px;">Previous Degree</h6>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Degree</label>
+              <input type="text" placeholder="Degree name" formControlName="Previousdegree"/>
+            </div>
+            <div class="form-field">
+              <label>Department</label>
+              <input type="text" placeholder="Department" formControlName="previousdepartment"/>
+            </div>
+            <div class="form-field">
+              <label>Previous Institution</label>
+              <input type="text" placeholder="College name" formControlName="previousinstitution"/>
+            </div>
+            <div class="form-field">
+              <label>University</label>
+              <input type="text" placeholder="Anna University" formControlName="previousuniversity"/>
+            </div>
+            <div class="form-field">
+              <label>Year of Passing</label>
+              <input type="text" placeholder="e.g. 2023" formControlName="previousyearofpassing"/>
+            </div>
+            <div class="form-field">
+              <label>Percentage / CGPA</label>
+              <input type="text" placeholder="e.g. 85% or 8.5" formControlName="previouspercentageorcgpa"/>
+            </div>
           </div>
-          <div class="form-field">
-            <label>University</label>
-            <input type="text" placeholder="Anna University" [(ngModel)]="formData.board"/>
-          </div>
-          <div class="form-field">
-            <label>Year of Passing</label>
-            <input type="text" placeholder="e.g. 2023" [(ngModel)]="formData.yearOfPassing"/>
-          </div>
-          <div class="form-field">
-            <label>Percentage / CGPA</label>
-            <input type="text" placeholder="e.g. 85% or 8.5" [(ngModel)]="formData.percentage"/>
-          </div>
-         </div>
         </div>
       </div>
 
-    </div>
+    </form><!-- ✅ closing </form> not </div> -->
 
     <div class="modal-footer">
-      <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1">← Previous</button>
+      <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1;onStepClick(modalStep)">← Previous</button>
       <button class="btn-secondary" (click)="closeModal()">Cancel</button>
       <div style="flex:1"></div>
-      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1">Next →</button>
-      <button class="btn-primary" *ngIf="modalStep === modalSteps.length - 1" (click)="saveStudent()">
+      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1 ;onStepClick(modalStep)">Next →</button>
+      <button class="btn-primary" *ngIf="modalStep === modalSteps.length - 1" (click)="addstudent()">
         {{ isEditing ? 'Update Student' : 'Add Student' }}
       </button>
     </div>

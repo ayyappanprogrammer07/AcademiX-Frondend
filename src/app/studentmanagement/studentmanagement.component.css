@@ -374,6 +374,11 @@
   margin: 16px 0 12px;
 }
 
+.error
+{
+  color: red;
+  font-size: 10px;
+}
 .section-title:first-child { margin-top: 0; }
 
 .form-grid {

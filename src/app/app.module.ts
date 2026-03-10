@@ -23,6 +23,7 @@ import { ToastrModule } from 'ngx-toastr';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule  ,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',

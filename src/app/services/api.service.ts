@@ -16,4 +16,28 @@ export class ApiService {
     console.log(url)
     return this.httpclient.post(url,data);
   }
+
+  public addstudent(data:any):Observable<any>
+  {
+    let baseurl = environment.baseUrl;
+    let url = `${baseurl}academix/studentmanagement/InsertStudent`
+    console.log(url);
+    return this.httpclient.post(url,data);
+  }
+
+  public getcourse()
+  {
+    let baseUrl =environment.baseUrl;
+    let url =`${baseUrl}academix/studentmanagement/GetCourses`
+    console.log(url);
+    return this.httpclient.get<any[]>(url);
+  }
+
+  public getDepartments(courseid:any)
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/GetDepartments?courseid=${courseid}`
+    console.log(url);
+    return this.httpclient.get<any[]>(url);
+  }
 }
