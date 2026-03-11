@@ -34,16 +34,11 @@ export class StudentmanagementComponent implements OnInit {
   form!: FormGroup;
   courses: any[] = [];
   departments :any[]=[];
-
-
-  students: Student[] = [
-    { id: 1, name: 'Arun Kumar', email: 'arun@mail.com', rollNo: 'R001', class: '10', section: 'A', gender: 'Male', phone: '9876543210', status: 'Active', bloodGroup: 'O+', dob: '2005-04-12', address: '12 Main St, Chennai', admissionDate: '2022-06-01', fatherName: 'Raj Kumar', motherName: 'Meena Kumar', parentPhone: '9876500001', degree: 'BE', department: 'CS', year: '1' },
-    { id: 2, name: 'Priya Sharma', email: 'priya@mail.com', rollNo: 'R002', class: '10', section: 'A', gender: 'Female', phone: '9876543211', status: 'Active', bloodGroup: 'A+', dob: '2005-07-22', address: '45 Park Ave, Chennai', admissionDate: '2022-06-01', fatherName: 'Suresh Sharma', motherName: 'Latha Sharma', parentPhone: '9876500002', degree: 'BSc', department: 'CS', year: '2' },
-    { id: 3, name: 'Vikram Singh', email: 'vikram@mail.com', rollNo: 'R003', class: '11', section: 'B', gender: 'Male', phone: '9876543212', status: 'Active', bloodGroup: 'B+', dob: '2004-11-05', address: '78 Lake Road, Chennai', admissionDate: '2021-06-01', fatherName: 'Rajan Singh', motherName: 'Kavitha Singh', parentPhone: '9876500003', degree: 'BE', department: 'Mechanical', year: '3' },
-    { id: 4, name: 'Divya Nair', email: 'divya@mail.com', rollNo: 'R004', class: '11', section: 'A', gender: 'Female', phone: '9876543213', status: 'Inactive', bloodGroup: 'AB+', dob: '2004-03-18', address: '23 Hill St, Chennai', admissionDate: '2021-06-01', fatherName: 'Mohan Nair', motherName: 'Suja Nair', parentPhone: '9876500004', degree: 'MSc', department: 'CS', year: '1' },
-    { id: 5, name: 'Karthik Raj', email: 'karthik@mail.com', rollNo: 'R005', class: '12', section: 'D', gender: 'Male', phone: '9876543214', status: 'Active', bloodGroup: 'O-', dob: '2003-09-30', address: '56 River Rd, Chennai', admissionDate: '2020-06-01', fatherName: 'Selvam Raj', motherName: 'Geetha Raj', parentPhone: '9876500005', degree: 'BE', department: 'Mechanical', year: '4' },
-    { id: 6, name: 'Sneha Reddy', email: 'sneha@mail.com', rollNo: 'R006', class: '12', section: 'B', gender: 'Female', phone: '9876543215', status: 'Active', bloodGroup: 'A-', dob: '2003-01-14', address: '90 Cross St, Chennai', admissionDate: '2020-06-01', fatherName: 'Venkat Reddy', motherName: 'Padma Reddy', parentPhone: '9876500006', degree: 'BSc', department: 'CS', year: '2' },
-  ];
+  totalstuentscount:any=0;
+  activestudentscount :any=0;
+  boyscount:any=0;
+  girlscount:any=0;
+  students: any[] = [];
 
   filteredStudents: Student[] = [];
   searchTerm = '';
@@ -69,7 +64,17 @@ export class StudentmanagementComponent implements OnInit {
 
   ngOnInit() {
     this.filteredStudents = [...this.students];
+    this.ngoncallers();
+    
+  }
+
+  ngoncallers()
+  {
     this.formValidation();
+    this.GetTotalStudentsCount();
+    this.getStudentsDetails();
+    this.activestudecount();
+    this.GetTotalBoysandGirlscount();
   }
 
   formValidation() {
@@ -228,6 +233,7 @@ export class StudentmanagementComponent implements OnInit {
                 this.closeModal();        
                 this.form.reset();        
                 this.modalStep = 0;    
+                this.ngoncallers();
             }
             else
             {
@@ -393,18 +399,58 @@ getcourses()
     this.showViewModal = false;
     this.selectedStudent = null;
   }
-  getDepartments()
-  {
-    this.apiservice.getDepartments(1).subscribe(
-    (response: any[]) =>
-    {
-      this.departments = response.map((c:any) => ({
-        departmentid: c.courseid,
-        departmentname: c.coursename
+
+ getDepartments(event :any) {
+
+  const selectedCourseName = event.target.value;  // "BE"
+  // Find the course object by name
+  const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
+  const courseId = selectedCourse?.courseid;
+
+  this.apiservice.getDepartments(courseId).subscribe(
+    (response: any[]) => {
+      this.departments = response.map((c: any) => ({
+        departmentid: c.departmentid,
+        departmentname: c.departmentname
       }));
     }
-  )
-  }
+  );
+}
 
+ GetTotalStudentsCount()
+ {
+    this.apiservice.GetTotalStudentsCount().subscribe(
+      (response)=>{
+        this.totalstuentscount=response;
+      }
+    );
+ }
+ getStudentsDetails()
+ {
+    this.apiservice.getStudentsDetails().subscribe(
+      (response)=>{
+        this.students=response;
+      }
+    )
+ }
+ activestudecount()
+ {
+  this.apiservice.activestudentscount().subscribe(
+    (response)=>{
+      this.activestudentscount=response;
+    }
+  )
+ }
+ GetTotalBoysandGirlscount()
+ {
+  this.apiservice.GetTotalBoysandGirlscount().subscribe(
+    (response)=>{
+      this.boyscount=response.boyscount;
+      this.girlscount =response.girlscount;
+      // this.girlscount =response.girlscount;
+      // this.boyscount = response.boyscount;
+    }
+  )
+ }
   
 }

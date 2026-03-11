@@ -25,6 +25,14 @@ export class ApiService {
     return this.httpclient.post(url,data);
   }
 
+  public getStudentsDetails()
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/GetStudentDetails`
+    console.log(url);
+    return this.httpclient.get<any[]>(url);
+  }
+
   public getcourse()
   {
     let baseUrl =environment.baseUrl;
@@ -39,5 +47,29 @@ export class ApiService {
     let url =`${baseurl}academix/studentmanagement/GetDepartments?courseid=${courseid}`
     console.log(url);
     return this.httpclient.get<any[]>(url);
+  }
+
+  public GetTotalStudentsCount()
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/GetTotalStudentsCount`
+    console.log(url);
+    return this.httpclient.get<any[]>(url);
+  }
+  
+  public activestudentscount()
+  {
+    let baseUrl =environment.baseUrl;
+    let url =`${baseUrl}academix/studentmanagement/GetTotalActiveStudentsCount`
+    console.log(url)
+    return this.httpclient.get<any[]>(url);
+  }
+
+  public GetTotalBoysandGirlscount()
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/GetTotalBoysandGirlscount`
+    console.log(url);
+    return this.httpclient.get<any>(url);
   }
 }
