@@ -24,7 +24,7 @@
         </svg>
       </div>
       <div class="stat-info">
-        <span class="stat-value">1,240</span>
+        <span class="stat-value">{{totalstuentscount}}</span>
         <span class="stat-label">Total Students</span>
       </div>
     </div>
@@ -35,7 +35,7 @@
         </svg>
       </div>
       <div class="stat-info">
-        <span class="stat-value">1,198</span>
+        <span class="stat-value">{{activestudentscount}}</span>
         <span class="stat-label">Active</span>
       </div>
     </div>
@@ -46,7 +46,7 @@
         </svg>
       </div>
       <div class="stat-info">
-        <span class="stat-value">680</span>
+        <span class="stat-value">{{boyscount}}</span>
         <span class="stat-label">Boys</span>
       </div>
     </div>
@@ -57,7 +57,7 @@
         </svg>
       </div>
       <div class="stat-info">
-        <span class="stat-value">560</span>
+        <span class="stat-value">{{girlscount}}</span>
         <span class="stat-label">Girls</span>
       </div>
     </div>
@@ -120,7 +120,7 @@
         <tr>
           <th>#</th>
           <th>Student</th>
-          <th>Roll No</th>
+          <th>Reg No</th>
           <th>Class</th>
           <th>Gender</th>
           <th>Phone</th>
@@ -129,51 +129,49 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let student of filteredStudents; let i = index">
-          <td class="row-num">{{ i + 1 }}</td>
-          <td>
-            <div class="student-info">
-              <div class="avatar" [style.background]="getAvatarColor(student.name)">
-                {{ student.name.charAt(0) }}
-              </div>
-              <div>
-                <span class="student-name">{{ student.name }}</span>
-                <span class="student-email">{{ student.email }}</span>
-              </div>
-            </div>
-          </td>
-          <td class="roll-no">{{ student.rollNo }}</td>
-          <td>{{ student.class }} - {{ student.section }}</td>
-          <td>{{ student.gender }}</td>
-          <td>{{ student.phone }}</td>
-          <td>
-            <span class="badge" [class.active]="student.status === 'Active'" [class.inactive]="student.status === 'Inactive'">
-              {{ student.status }}
-            </span>
-          </td>
-          <td>
-            <div class="action-btns">
-              <button class="icon-btn view" (click)="viewStudent(student)" title="View">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                </svg>
-              </button>
-              <button class="icon-btn edit" (click)="editStudent(student)" title="Edit">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </button>
-              <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                  <path d="M10 11v6"/><path d="M14 11v6"/>
-                </svg>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+  <tr *ngFor="let student of students; let i = index">
+    <td class="row-num">{{ i + 1 }}</td>
+    <td>
+      <div class="student-info">
+        <div class="avatar" [style.background]="getAvatarColor(student.personalInfo?.firstName)">
+          {{ student.personalInfo?.firstName?.charAt(0) }}  <!-- ❌ was student.personalInfo.charAt(0) -->
+        </div>
+        <div>
+          <span class="student-name">{{ student.personalInfo?.firstName }} {{ student.personalInfo?.lastName }}</span>
+          <span class="student-email">{{ student.contactInfo?.emailAddress || '-' }}</span>
+        </div>
+      </div>
+    </td>
+    <td class="roll-no">{{ student.personalInfo?.regNo }}</td>  <!-- ❌ was student.personalInfo.regNo -->
+    <td>{{ student.academicDetails?.courseOrProgram }} - {{ student.academicDetails?.section }}</td>  <!-- ❌ was student.class -->
+    <td>{{ student.personalInfo?.gender }}</td>  <!-- ❌ was student.gender -->
+    <td>{{ student.contactInfo?.mobileNo }}</td>  <!-- ❌ was student.phone -->
+    <td>
+      <span class="badge active">Active</span>  <!-- no status in response, hardcode for now -->
+    </td>
+    <td>
+      <div class="action-btns">
+        <button class="icon-btn view" (click)="viewStudent(student)" title="View">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <button class="icon-btn edit" (click)="editStudent(student)" title="Edit">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+        <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/>
+          </svg>
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
     </table>
     <div class="pagination">
       <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
@@ -388,9 +386,9 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Course / Program <span class="req">*</span></label>
-            <select formControlName="course">
+            <select formControlName="course" (change)="getDepartments($event)">
               <option value="">Select course</option>
-               <option *ngFor="let c of courses" [value]="c.courseid">
+               <option *ngFor="let c of courses" [value]="c.coursename">
                   {{ c.coursename }}
                </option>
 
@@ -400,10 +398,9 @@
           <div class="form-field">
             <label>Department <span class="req">*</span></label>
             <select formControlName="dept">
-              <option value="">Select department</option>
-              <option>Computer Science</option><option>Electronics</option>
-              <option>Mechanical</option><option>Civil</option>
-              <option>Mathematics</option><option>Physics</option>
+              <option *ngFor="let d of departments" [value]="d.departmentname">
+                  {{d.departmentname}}
+              </option>
             </select>
             <small class="error" *ngIf="form.get('dept')?.invalid && form.get('dept')?.touched">Department is required.</small>
           </div>
