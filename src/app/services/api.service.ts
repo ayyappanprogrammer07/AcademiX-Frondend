@@ -72,4 +72,35 @@ export class ApiService {
     console.log(url);
     return this.httpclient.get<any>(url);
   }
+
+  public getcountnewmonth()
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/getcountnewmonth`
+    console.log(url);
+    return this.httpclient.get<any>(url);
+  }
+
+  public isregnouniqueornot(regno:any)
+  {
+    let baseurl =environment.baseUrl;
+    let url =`${baseurl}academix/studentmanagement/isregnouniqueornot?regno=${regno}`
+    return this.httpclient.get<any>(url);
+  }
+
+  public updatestudentrecord(data:any):Observable<any>
+  {
+    let baseurl = environment.baseUrl;
+    let url = `${baseurl}academix/studentmanagement/updatestudentrecord`
+    console.log(url);
+    return this.httpclient.post(url,data);
+  }
+
+  public deleteStudent()
+  {
+     let baseurl = environment.baseUrl;
+    let url = `${baseurl}academix/studentmanagement/Makestudentinactive`
+    console.log(url);
+    return this.httpclient.delete(url);
+  }
 }

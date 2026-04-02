@@ -3,27 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../services/api.service';
-export interface Student {
-  id: number;
-  name: string;
-  email: string;
-  rollNo: string;
-  class: string;
-  section: string;
-  gender: string;
-  phone: string;
-  status: string;
-  bloodGroup: string;
-  dob: string;
-  address: string;
-  admissionDate: string;
-  fatherName: string;
-  motherName: string;
-  parentPhone: string;
-  degree: string;
-  department: string;
-  year: string;
-}
 
 @Component({
   selector: 'app-studentmanagement',
@@ -31,16 +10,19 @@ export interface Student {
   styleUrls: ['./studentmanagement.component.css']
 })
 export class StudentmanagementComponent implements OnInit {
+
+  
   form!: FormGroup;
   courses: any[] = [];
-  departments :any[]=[];
-  totalstuentscount:any=0;
-  activestudentscount :any=0;
-  boyscount:any=0;
-  girlscount:any=0;
+  departments: any[] = [];
+  totalstuentscount: any = 0;
+  activestudentscount: any = 0;
+  boyscount: any = 0;
+  girlscount: any = 0;
+  newmonthcount: any = 0;
   students: any[] = [];
 
-  filteredStudents: Student[] = [];
+  filteredStudents: any[] = [];
   searchTerm = '';
   selectedDegree = '';
   selectedDepartment = '';
@@ -51,7 +33,9 @@ export class StudentmanagementComponent implements OnInit {
   showModal = false;
   showViewModal = false;
   isEditing = false;
-  selectedStudent: Student | null = null;
+  selectedStudent: any = null;   // ← changed to any
+
+  regnoExists: any = null;
 
   formData: any = {};
 
@@ -60,222 +44,289 @@ export class StudentmanagementComponent implements OnInit {
 
   avatarColors = ['#7C3AED', '#2563EB', '#059669', '#DC2626', '#D97706', '#db2777'];
 
-  constructor(private router: Router, private formbuilder: FormBuilder,private toastrservice:ToastrService,private apiservice:ApiService) {}
+  // Import modal
+  showImportModal = false;
+  importFileType = 'excel';
+  importFileName = '';
+  importFile: File | null = null;
+
+  constructor(
+    private router: Router,
+    private formbuilder: FormBuilder,
+    private toastrservice: ToastrService,
+    private apiservice: ApiService
+  ) {}
 
   ngOnInit() {
     this.filteredStudents = [...this.students];
     this.ngoncallers();
-    
   }
 
-  ngoncallers()
-  {
+  ngoncallers() {
     this.formValidation();
     this.GetTotalStudentsCount();
     this.getStudentsDetails();
     this.activestudecount();
     this.GetTotalBoysandGirlscount();
+    this.getcountnewmonth();
   }
 
   formValidation() {
     this.form = this.formbuilder.group({
-      studentId: ['', Validators.required],
-      Firstname: ['', Validators.required],
-      middlename: [''],
-      lastname: ['', Validators.required],
-      gender: ['', Validators.required],
-      DOB: ['', Validators.required],
-      age: [''],
-      bloodgroup: [''],
-      nationality: [''],
-      Community: [''],
+      studentId:            ['', Validators.required],
+      Firstname:            ['', Validators.required],
+      middlename:           [''],
+      lastname:             ['', Validators.required],
+      gender:               ['', Validators.required],
+      DOB:                  ['', Validators.required],
+      age:                  [''],
+      bloodgroup:           [''],
+      nationality:          [''],
+      Community:            [''],
 
-      mobileno: ['', Validators.required],
-      alternativemobileno:[''],
-      emailaddress:[''],
-      addressline1: ['', Validators.required],
-      addressline2: [''],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      Country: [''],
-      PostalCode: [''],
+      mobileno:             ['', Validators.required],
+      alternativemobileno:  [''],
+      emailaddress:         [''],
+      addressline1:         ['', Validators.required],
+      addressline2:         [''],
+      city:                 ['', Validators.required],
+      state:                ['', Validators.required],
+      Country:              [''],
+      PostalCode:           [''],
 
-      fathersname: ['', Validators.required],
-      fathersmobileno: [''],
-      mothersname: ['', Validators.required],
-      mothersmobileno: [''],
-      guardianname: [''],
-      guardianno: [''],
-      relationship: [''],
+      fathersname:          ['', Validators.required],
+      fathersmobileno:      [''],
+      mothersname:          ['', Validators.required],
+      mothersmobileno:      [''],
+      guardianname:         [''],
+      guardianno:           [''],
+      relationship:         [''],
 
-      course: ['', Validators.required],
-      dept: ['',Validators.required],
-      year: ['', Validators.required],
-      semester:['',Validators.required],
-      section: [''],
-      rollno: [''],
-      admisiondate: ['',Validators.required],
-      admissontype: ['',Validators.required],
+      course:               ['', Validators.required],
+      dept:                 ['', Validators.required],
+      year:                 ['', Validators.required],
+      semester:             ['', Validators.required],
+      section:              [''],
+      rollno:               [''],
+      admisiondate:         ['', Validators.required],
+      admissontype:         ['', Validators.required],
 
+      AadhaarNumber:        [''],
+      PassportNumber:       [''],
+      GovtIDType:           [''],
+      GovtIDNumber:         [''],
 
+      PreviousSchoolofsslc: ['', Validators.required],
+      Boardofsslc:          ['', Validators.required],
+      YearofPassingofsslc:  ['', Validators.required],
+      PercentageCGPAofsslc: ['', Validators.required],
 
-      AadhaarNumber: [''],
-      PassportNumber: [''],
-      GovtIDType: [''],
-      GovtIDNumber: [''],
+      PreviousSchoolofhsc:  ['', Validators.required],
+      Boardofhsc:           ['', Validators.required],
+      YearofPassingofhsc:   ['', Validators.required],
+      PercentageCGPAofhsc:  ['', Validators.required],
 
-      PreviousSchoolofsslc:['',Validators.required],
-      Boardofsslc:['',Validators.required],
-      YearofPassingofsslc:['',Validators.required],
-      PercentageCGPAofsslc:['',Validators.required],
-
-      
-      PreviousSchoolofhsc:['',Validators.required],
-      Boardofhsc:['',Validators.required],
-      YearofPassingofhsc:['',Validators.required],
-      PercentageCGPAofhsc:['',Validators.required],
-
-      Previousdegree:[''],
-      previousdepartment:[''],
-      previousinstitution:[''],
-      previousuniversity:[''],
-      previousyearofpassing:[''],
-      previouspercentageorcgpa:['']
-
+      Previousdegree:           [''],
+      previousdepartment:       [''],
+      previousinstitution:      [''],
+      previousuniversity:       [''],
+      previousyearofpassing:    [''],
+      previouspercentageorcgpa: ['']
     });
   }
 
-  addstudent()
-  {
-    if(this.form.invalid)
-    {
+  // ── Import Modal ─────────────────────────────────────────────────────────────
+  openImportModal()  { this.showImportModal = true; }
+  closeImportModal() { this.showImportModal = false; this.importFileName = ''; this.importFile = null; }
+
+  onImportFileSelect(event: any) {
+    const file = event.target.files[0];
+    if (file) { this.importFile = file; this.importFileName = file.name; }
+  }
+
+  onImportFileDrop(event: DragEvent) {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (file) { this.importFile = file; this.importFileName = file.name; }
+  }
+
+  downloadTemplate(event: Event) { event.preventDefault(); }
+
+  submitImport() {
+    if (!this.importFile) return;
+    this.closeImportModal();
+  }
+
+  // ── Add Student ──────────────────────────────────────────────────────────────
+  addstudent() {
+    if (this.regnoExists === false) {
+      this.toastrservice.error('Student ID already exists. Please use a different ID.');
+      this.modalStep = 0;
+      return;
+    }
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toastrservice.error('Please enter Mandatory Fields');
-      console.log('please enter all the details')
       return;
+    }
+
+    const requestobject = {
+      personalInfo: {
+        regNo:              this.form.value.studentId,
+        firstName:          this.form.value.Firstname,
+        middleName:         this.form.value.middlename,
+        lastName:           this.form.value.lastname,
+        gender:             this.form.value.gender,
+        dateOfBirth:        this.form.value.DOB,
+        age:                this.form.value.age,
+        bloodGroup:         this.form.value.bloodgroup,
+        nationality:        this.form.value.nationality,
+        categoryOrCommunity: this.form.value.Community,
+        createdon:          this.getTodayDate()
+      },
+      contactInfo: {
+        mobileNo:       this.form.value.mobileno,
+        alternateMobile: this.form.value.alternativemobileno,
+        emailAddress:   this.form.value.emailaddress,
+        addressLine1:   this.form.value.addressline1,
+        addressLine2:   this.form.value.addressline2,
+        city:           this.form.value.city,
+        state:          this.form.value.state,
+        country:        this.form.value.Country,
+        postalCode:     this.form.value.PostalCode
+      },
+      parentDetails: {
+        fatherName:        this.form.value.fathersname,
+        fathersMobileNumber: this.form.value.fathersmobileno,
+        mothersName:       this.form.value.mothersname,
+        mothersMobile:     this.form.value.mothersmobileno,
+        guardianName:      this.form.value.guardianname,
+        guardianPhone:     this.form.value.guardianno,
+        relationship:      this.form.value.relationship
+      },
+      academicDetails: {
+        courseOrProgram: this.form.value.course,
+        department:      this.form.value.dept,
+        year:            this.form.value.year,
+        semester:        this.form.value.semester,
+        section:         this.form.value.section,
+        rollNo:          this.form.value.rollno,
+        admissionDate:   this.form.value.admisiondate,
+        admissionType:   this.form.value.admissontype
+      },
+      identificationDetails: {
+        regNo:                   this.form.value.studentId,
+        aadhaarNumber:           this.form.value.AadhaarNumber,
+        passportNumber:          this.form.value.PassportNumber,
+        govtIDType:              this.form.value.GovtIDType,
+        govtIDNumber:            this.form.value.GovtIDNumber,
+        sslcSchool:              this.form.value.PreviousSchoolofsslc,
+        sslcBoard:               this.form.value.Boardofsslc,
+        sslcYearOfPassing:       this.form.value.YearofPassingofsslc,
+        sslcPercentageOrCGPA:    this.form.value.PercentageCGPAofsslc,
+        hscSchool:               this.form.value.PreviousSchoolofhsc,
+        hscBoard:                this.form.value.Boardofhsc,
+        hscYearOfPassing:        this.form.value.YearofPassingofhsc,
+        hscPercentageOrCGPA:     this.form.value.PercentageCGPAofhsc,
+        previousDegree:          this.form.value.Previousdegree,
+        previousDepartment:      this.form.value.previousdepartment,
+        previousInstitution:     this.form.value.previousinstitution,
+        previousUniversity:      this.form.value.previousuniversity,
+        previousYearOfPassing:   this.form.value.previousyearofpassing,
+        previousPercentageOrCGPA: this.form.value.previouspercentageorcgpa
+      }
+    };
+
+
+    if(this.isEditing)
+    {
+      this.updateStudnet(requestobject)
     }
     else
     {
-        let requestobject = 
-        {
-            "personalInfo":
-                  {
-                    "regNo": this.form.value.studentId,
-                    "firstName": this.form.value.Firstname,
-                    "middleName": this.form.value.middlename,
-                    "lastName": this.form.value.lastname,
-                    "gender": this.form.value.gender,
-                    "dateOfBirth": this.form.value.DOB,
-                    "age": this.form.value.age,
-                    "bloodGroup": this.form.value.bloodgroup,
-                    "nationality": this.form.value.nationality,
-                    "categoryOrCommunity": this.form.value.Community
-                  },
-            "contactInfo": {
-                    "mobileNo": this.form.value.mobileno,
-                    "alternateMobile": this.form.value.alternativemobileno,
-                    "emailAddress": this.form.value.emailaddress,
-                    "addressLine1": this.form.value.addressline1,
-                    "addressLine2": this.form.value.addressline2,
-                    "city": this.form.value.city,
-                    "state": this.form.value.state,
-                    "country": this.form.value.Country,
-                    "postalCode": this.form.value.PostalCode
-                  },
-            "parentDetails": {
-                    "fatherName": this.form.value.fathersname,
-                    "fathersMobileNumber": this.form.value.fathersmobileno,
-                    "mothersName": this.form.value.mothersname,
-                    "mothersMobile":this.form.value.mothersmobileno,
-                    "guardianName": this.form.value.guardianname,
-                    "guardianPhone": this.form.value.guardianno,
-                    "relationship": this.form.value.relationship
-                  },
-            "academicDetails": {
-                    "courseOrProgram": this.form.value.course,
-                    "department": this.form.value.dept,
-                    "year": this.form.value.year,
-                    "semester": this.form.value.semester,
-                    "section": this.form.value.section,
-                    "rollNo": this.form.value.rollno,
-                    "admissionDate": this.form.value.admisiondate,
-                    "admissionType": this.form.value.admissontype
-                  },
-            "identificationDetails": {
-                    "regNo": this.form.value.studentId,
-                    "aadhaarNumber": this.form.value.AadhaarNumber,
-                    "passportNumber": this.form.value.PassportNumber,
-                    "govtIDType": this.form.value.GovtIDType,
-                    "govtIDNumber": this.form.value.GovtIDNumber,
-                    "sslcSchool": this.form.value.PreviousSchoolofsslc,
-                    "sslcBoard":this.form.value.Boardofsslc,
-                    "sslcYearOfPassing": this.form.value.YearofPassingofsslc,
-                    "sslcPercentageOrCGPA": this.form.value.PercentageCGPAofsslc,
-                    "hscSchool": this.form.value.PreviousSchoolofhsc,
-                    "hscBoard": this.form.value.Boardofhsc,
-                    "hscYearOfPassing": this.form.value.YearofPassingofhsc,
-                    "hscPercentageOrCGPA": this.form.value.PercentageCGPAofhsc,
-
-                    "previousDegree":this.form.value.Previousdegree,
-                    "previousDepartment": this.form.value.previousdepartment,
-                    "previousInstitution": this.form.value.previousinstitution,
-                    "previousUniversity": this.form.value.previousuniversity,
-                    "previousYearOfPassing": this.form.value.previousyearofpassing,
-                    "previousPercentageOrCGPA": this.form.value.previouspercentageorcgpa
-                  }
-          }
-        console.log(requestobject);
-        this.apiservice.addstudent(requestobject).subscribe(
-          (response)=>{
-            if(response.isadded)
-            {
-                this.toastrservice.success('Students Added Succesfully');
-                this.closeModal();        
-                this.form.reset();        
-                this.modalStep = 0;    
-                this.ngoncallers();
-            }
-            else
-            {
-              this.toastrservice.error('Failed to add ','Please Try again');
-            }
-          }
-        )
+      this.addstud(requestobject)
     }
+    this.regnoExists = null;
   }
 
-getcourses()
-{
-  this.apiservice.getcourse().subscribe(
-    (response: any[]) =>
-    {
-      this.courses = response.map((c:any) => ({
-        courseid: c.courseid,
+  updateStudnet(requestobject :any)
+  {
+        console.log(requestobject);
+    this.apiservice.updatestudentrecord(requestobject).subscribe((response)=>{
+      if(response.isadded)
+      {
+        this.toastrservice.success('Student Added Successfully');
+        this.closeModal();
+        this.form.reset();
+        this.modalStep = 0;
+        this.ngoncallers();
+      }
+       else {
+        this.toastrservice.error('Failed to add', 'Please Try again');
+      }
+    });
+
+  }
+
+  addstud(requestobject :any)
+  {
+     this.apiservice.addstudent(requestobject).subscribe((response) => {
+      if (response.isadded) {
+        this.toastrservice.success('Student Added Successfully');
+        this.closeModal();
+        this.form.reset();
+        this.modalStep = 0;
+        this.ngoncallers();
+      } else {
+        this.toastrservice.error('Failed to add', 'Please Try again');
+      }
+    });
+  }
+
+  // ── Courses & Departments ────────────────────────────────────────────────────
+  getcourses() {
+    this.apiservice.getcourse().subscribe((response: any[]) => {
+      this.courses = response.map((c: any) => ({
+        courseid:   c.courseid,
         coursename: c.coursename
       }));
-    }
-  )
-}
- onStepClick(index: number) {
-  if (index === 3) {       // 3 = Academic Details (0-based index)
-    this.getcourses();
+    });
   }
-}
+
+  onStepClick(index: number) {
+    if (index === 3) { this.getcourses(); }
+  }
+
+  getDepartments(event: any) {
+    const selectedCourseName = event.target.value;
+    const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
+    const courseId = selectedCourse?.courseid;
+    this.apiservice.getDepartments(courseId).subscribe((response: any[]) => {
+      this.departments = response.map((c: any) => ({
+        departmentid:   c.departmentid,
+        departmentname: c.departmentname
+      }));
+    });
+  }
+
+  // ── Filter ───────────────────────────────────────────────────────────────────
   filterStudents() {
     this.filteredStudents = this.students.filter(s => {
-      const matchSearch = !this.searchTerm ||
-        s.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        s.rollNo.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchDegree = !this.selectedDegree || s.degree === this.selectedDegree;
-      const matchDept = !this.selectedDepartment || s.department === this.selectedDepartment;
-      const matchYear = !this.selectedYear || s.year === this.selectedYear;
-      const matchSection = !this.selectedSection || s.section === this.selectedSection;
-      const matchGender = !this.selectedGender || s.gender === this.selectedGender;
+      const fullName   = `${s.personalInfo?.firstName ?? ''} ${s.personalInfo?.lastName ?? ''}`.toLowerCase();
+      const regNo      = (s.personalInfo?.regNo ?? '').toLowerCase();
+      const matchSearch    = !this.searchTerm || fullName.includes(this.searchTerm.toLowerCase()) || regNo.includes(this.searchTerm.toLowerCase());
+      const matchDegree    = !this.selectedDegree     || s.academicDetails?.courseOrProgram === this.selectedDegree;
+      const matchDept      = !this.selectedDepartment || s.academicDetails?.department      === this.selectedDepartment;
+      const matchYear      = !this.selectedYear       || s.academicDetails?.year            === this.selectedYear;
+      const matchSection   = !this.selectedSection    || s.academicDetails?.section         === this.selectedSection;
+      const matchGender    = !this.selectedGender     || s.personalInfo?.gender             === this.selectedGender;
       return matchSearch && matchDegree && matchDept && matchYear && matchSection && matchGender;
     });
   }
 
+  // ── Helpers ──────────────────────────────────────────────────────────────────
   getAvatarColor(name: string): string {
+    if (!name) return this.avatarColors[0];
     const index = name.charCodeAt(0) % this.avatarColors.length;
     return this.avatarColors[index];
   }
@@ -288,169 +339,164 @@ getcourses()
       let age = today.getFullYear() - birth.getFullYear();
       const m = today.getMonth() - birth.getMonth();
       if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-      this.form.patchValue({ age: age });
+      this.form.patchValue({ age });
     }
   }
 
+  getTodayDate(): string {
+    const today = new Date();
+    const day   = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year  = today.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  // ── Modal controls ───────────────────────────────────────────────────────────
   openAddStudent() {
     this.isEditing = false;
-    this.formData = {};
+    this.formData  = {};
     this.form.reset();
     this.modalStep = 0;
     this.showModal = true;
   }
 
-  editStudent(student: Student) {
+  editStudent(student: any) {
     this.isEditing = true;
-    this.formData = { ...student };
+    this.formData  = { ...student };
     this.form.patchValue({
-      Firstname: student.name.split(' ')[0],
-      lastname: student.name.split(' ')[1] || '',
-      gender: student.gender,
-      DOB: student.dob,
-      bloodgroup: student.bloodGroup,
-      mobileno: student.phone,
-      address: student.address,
-      fathersname: student.fatherName,
-      fathersmobileno: student.parentPhone,
-      mothersname: student.motherName,
-      dept: student.department,
-      year: student.year,
-      admissiondate: student.admissionDate,
+      studentId:    student.personalInfo?.regNo,
+      Firstname:    student.personalInfo?.firstName,
+      middlename:   student.personalInfo?.middleName,
+      lastname:     student.personalInfo?.lastName,
+      gender:       student.personalInfo?.gender,
+      DOB:          student.personalInfo?.dateOfBirth,
+      age:          student.personalInfo?.age,
+      bloodgroup:   student.personalInfo?.bloodGroup,
+      nationality:  student.personalInfo?.nationality,
+      Community:    student.personalInfo?.categoryOrCommunity,
+
+      mobileno:            student.contactInfo?.mobileNo,
+      alternativemobileno: student.contactInfo?.alternateMobile,
+      emailaddress:        student.contactInfo?.emailAddress,
+      addressline1:        student.contactInfo?.addressLine1,
+      addressline2:        student.contactInfo?.addressLine2,
+      city:                student.contactInfo?.city,
+      state:               student.contactInfo?.state,
+      Country:             student.contactInfo?.country,
+      PostalCode:          student.contactInfo?.postalCode,
+
+      fathersname:     student.parentDetails?.fatherName,
+      fathersmobileno: student.parentDetails?.fathersMobileNumber,
+      mothersname:     student.parentDetails?.mothersName,
+      mothersmobileno: student.parentDetails?.mothersMobile,
+      guardianname:    student.parentDetails?.guardianName,
+      guardianno:      student.parentDetails?.guardianPhone,
+      relationship:    student.parentDetails?.relationship,
+
+      course:       student.academicDetails?.courseOrProgram,
+      dept:         student.academicDetails?.department,
+      year:         student.academicDetails?.year,
+      semester:     student.academicDetails?.semester,
+      section:      student.academicDetails?.section,
+      rollno:       student.academicDetails?.rollNo,
+      admisiondate: student.academicDetails?.admissionDate,
+      admissontype: student.academicDetails?.admissionType,
+
+      AadhaarNumber:  student.identificationDetails?.aadhaarNumber,
+      PassportNumber: student.identificationDetails?.passportNumber,
+      GovtIDType:     student.identificationDetails?.govtIDType,
+      GovtIDNumber:   student.identificationDetails?.govtIDNumber,
+
+      PreviousSchoolofsslc: student.identificationDetails?.sslcSchool,
+      Boardofsslc:          student.identificationDetails?.sslcBoard,
+      YearofPassingofsslc:  student.identificationDetails?.sslcYearOfPassing,
+      PercentageCGPAofsslc: student.identificationDetails?.sslcPercentageOrCGPA,
+
+      PreviousSchoolofhsc:  student.identificationDetails?.hscSchool,
+      Boardofhsc:           student.identificationDetails?.hscBoard,
+      YearofPassingofhsc:   student.identificationDetails?.hscYearOfPassing,
+      PercentageCGPAofhsc:  student.identificationDetails?.hscPercentageOrCGPA,
+
+      Previousdegree:           student.identificationDetails?.previousDegree,
+      previousdepartment:       student.identificationDetails?.previousDepartment,
+      previousinstitution:      student.identificationDetails?.previousInstitution,
+      previousuniversity:       student.identificationDetails?.previousUniversity,
+      previousyearofpassing:    student.identificationDetails?.previousYearOfPassing,
+      previouspercentageorcgpa: student.identificationDetails?.previousPercentageOrCGPA,
     });
     this.modalStep = 0;
     this.showModal = true;
   }
 
-  viewStudent(student: Student) {
+  viewStudent(student: any) {
     this.selectedStudent = student;
-    this.showViewModal = true;
+    this.showViewModal   = true;
   }
 
-  saveStudent() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const f = this.form.value;
-    if (this.isEditing) {
-      const index = this.students.findIndex(s => s.id === this.formData.id);
-      if (index !== -1) {
-        this.students[index] = {
-          ...this.students[index],
-          name: `${f.Firstname} ${f.lastname}`,
-          gender: f.gender,
-          dob: f.DOB,
-          bloodGroup: f.bloodgroup,
-          phone: f.mobileno,
-          address: f.address,
-          fatherName: f.fathersname,
-          parentPhone: f.fathersmobileno,
-          motherName: f.mothersname,
-          department: f.dept,
-          year: f.year,
-          admissionDate: f.admissiondate,
-        };
+  deleteStudent(student: any) {
+   console.log(student.personalInfo.regNo)
+   this.apiservice.deleteStudent().subscribe(response => {
+      if(response==false)
+      {
+          console.log('Student failed to delete')
       }
-    } else {
-      const newStudent: Student = {
-        id: this.students.length + 1,
-        name: `${f.Firstname} ${f.lastname}`,
-        email: this.formData.email || '',
-        rollNo: this.formData.rollNo || '',
-        class: f.year || '',
-        section: this.formData.section || '',
-        gender: f.gender,
-        phone: f.mobileno,
-        status: 'Active',
-        bloodGroup: f.bloodgroup || '',
-        dob: f.DOB,
-        address: f.address,
-        admissionDate: f.admissiondate,
-        fatherName: f.fathersname,
-        motherName: f.mothersname,
-        parentPhone: f.fathersmobileno,
-        degree: f.course,
-        department: f.dept,
-        year: f.year,
-      };
-      this.students.push(newStudent);
-    }
-    this.filterStudents();
-    this.closeModal();
-  }
-
-  deleteStudent(student: Student) {
-    if (confirm(`Deactivate ${student.name}?`)) {
-      const index = this.students.findIndex(s => s.id === student.id);
-      if (index !== -1) this.students[index].status = 'Inactive';
-      this.filterStudents();
-    }
+      else
+      {
+        console.log('Student succesfully')
+      }
+    });
   }
 
   closeModal() {
     this.showModal = false;
-    this.formData = {};
+    this.formData  = {};
     this.form.reset();
     this.modalStep = 0;
+    this.regnoExists = null;
   }
 
   closeViewModal() {
-    this.showViewModal = false;
+    this.showViewModal   = false;
     this.selectedStudent = null;
   }
 
- getDepartments(event :any) {
+  // ── API Calls ────────────────────────────────────────────────────────────────
+  GetTotalStudentsCount() {
+    this.apiservice.GetTotalStudentsCount().subscribe(response => {
+      this.totalstuentscount = response;
+    });
+  }
 
-  const selectedCourseName = event.target.value;  // "BE"
-  // Find the course object by name
-  const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
-  const courseId = selectedCourse?.courseid;
+  getStudentsDetails() {
+    this.apiservice.getStudentsDetails().subscribe(response => {
+      this.students = response;
+    });
+  }
 
-  this.apiservice.getDepartments(courseId).subscribe(
-    (response: any[]) => {
-      this.departments = response.map((c: any) => ({
-        departmentid: c.departmentid,
-        departmentname: c.departmentname
-      }));
-    }
-  );
-}
+  activestudecount() {
+    this.apiservice.activestudentscount().subscribe(response => {
+      this.activestudentscount = response;
+    });
+  }
 
- GetTotalStudentsCount()
- {
-    this.apiservice.GetTotalStudentsCount().subscribe(
-      (response)=>{
-        this.totalstuentscount=response;
-      }
-    );
- }
- getStudentsDetails()
- {
-    this.apiservice.getStudentsDetails().subscribe(
-      (response)=>{
-        this.students=response;
-      }
-    )
- }
- activestudecount()
- {
-  this.apiservice.activestudentscount().subscribe(
-    (response)=>{
-      this.activestudentscount=response;
-    }
-  )
- }
- GetTotalBoysandGirlscount()
- {
-  this.apiservice.GetTotalBoysandGirlscount().subscribe(
-    (response)=>{
-      this.boyscount=response.boyscount;
-      this.girlscount =response.girlscount;
-      // this.girlscount =response.girlscount;
-      // this.boyscount = response.boyscount;
-    }
-  )
- }
-  
+  GetTotalBoysandGirlscount() {
+    this.apiservice.GetTotalBoysandGirlscount().subscribe(response => {
+      this.boyscount  = response.boyscount;
+      this.girlscount = response.girlscount;
+    });
+  }
+
+  getcountnewmonth() {
+    this.apiservice.getcountnewmonth().subscribe(response => {
+      this.newmonthcount = response;
+    });
+  }
+
+  isregnouniqueornot() {
+    const value = this.form.get('studentId')?.value;
+    if (!value || value.trim() === '') { this.regnoExists = null; return; }
+    this.apiservice.isregnouniqueornot(value).subscribe(response => {
+      this.regnoExists = response;
+    });
+  }
 }

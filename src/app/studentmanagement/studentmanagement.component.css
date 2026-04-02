@@ -642,3 +642,101 @@
   padding: 16px 24px;
   border-top: 1px solid #f1f5f9;
 }
+
+
+/* ── View Modal Section Titles ─────────────────────────────── */
+.view-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #7C3AED;
+  margin: 20px 0 10px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+  border-left: 3px solid #7C3AED;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── View Grid ─────────────────────────────────────────────── */
+.view-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 20px;
+  margin-bottom: 8px;
+  padding: 14px 12px;
+  background: #faf9ff;
+  border: 1px solid #ede9fe;
+  border-radius: 8px;
+}
+
+/* ── View Items ────────────────────────────────────────────── */
+.view-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.view-label {
+  font-size: 11px;
+  color: #7C3AED;
+  font-weight: 500;
+}
+
+.view-value {
+  font-size: 13px;
+  color: #1e1b4b;
+  font-weight: 400;
+}
+
+/* ── Profile Header ────────────────────────────────────────── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+  border-radius: 10px;
+  border: 1px solid #ddd6fe;
+}
+
+.profile-info h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #3b0764;
+}
+
+.profile-info p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #6d28d9;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+.page-size-selector select {
+  padding: 5px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+}
+.page-size-selector select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.1);
+}
+.pagination {
+  margin-top: 16px;  /* ← add this */
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}

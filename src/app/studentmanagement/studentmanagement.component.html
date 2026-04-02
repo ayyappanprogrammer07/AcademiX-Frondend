@@ -6,12 +6,21 @@
       <h1 class="page-title">Student Management</h1>
       <p class="page-subtitle">Manage all student records</p>
     </div>
-    <button class="btn-primary" (click)="openAddStudent()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      Add Student
-    </button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-secondary" (click)="openImportModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Import
+      </button>
+      <button class="btn-primary" (click)="openAddStudent()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Student
+      </button>
+    </div>
   </div>
 
   <!-- Stats Row -->
@@ -40,22 +49,26 @@
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon blue">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      </div>
+     <div class="stat-icon blue">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="7" r="4"/>
+        <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
+      </svg>
+    </div>
       <div class="stat-info">
         <span class="stat-value">{{boyscount}}</span>
         <span class="stat-label">Boys</span>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon pink">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      </div>
+     <div class="stat-icon pink">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="7" r="4"/>
+        <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
+        <line x1="12" y1="16" x2="12" y2="21"/>
+        <line x1="9" y1="19" x2="15" y2="19"/>
+      </svg>
+    </div>
       <div class="stat-info">
         <span class="stat-value">{{girlscount}}</span>
         <span class="stat-label">Girls</span>
@@ -68,7 +81,7 @@
         </svg>
       </div>
       <div class="stat-info">
-        <span class="stat-value">42</span>
+        <span class="stat-value">{{newmonthcount}}</span>
         <span class="stat-label">New This Month</span>
       </div>
     </div>
@@ -95,10 +108,10 @@
     </select>
     <select class="filter-select" [(ngModel)]="selectedYear" (change)="filterStudents()">
       <option value="">All Years</option>
-      <option value="1">Year 1</option>
-      <option value="2">Year 2</option>
-      <option value="3">Year 3</option>
-      <option value="4">Year 4</option>
+      <option value="1st Year">Year 1</option>
+      <option value="2nd Year">Year 2</option>
+      <option value="3rd Year">Year 3</option>
+      <option value="4th Year">Year 4</option>
     </select>
     <select class="filter-select" [(ngModel)]="selectedSection" (change)="filterStudents()">
       <option value="">All Classes</option>
@@ -129,60 +142,69 @@
         </tr>
       </thead>
       <tbody>
-  <tr *ngFor="let student of students; let i = index">
-    <td class="row-num">{{ i + 1 }}</td>
-    <td>
-      <div class="student-info">
-        <div class="avatar" [style.background]="getAvatarColor(student.personalInfo?.firstName)">
-          {{ student.personalInfo?.firstName?.charAt(0) }}  <!-- ❌ was student.personalInfo.charAt(0) -->
-        </div>
-        <div>
-          <span class="student-name">{{ student.personalInfo?.firstName }} {{ student.personalInfo?.lastName }}</span>
-          <span class="student-email">{{ student.contactInfo?.emailAddress || '-' }}</span>
-        </div>
-      </div>
-    </td>
-    <td class="roll-no">{{ student.personalInfo?.regNo }}</td>  <!-- ❌ was student.personalInfo.regNo -->
-    <td>{{ student.academicDetails?.courseOrProgram }} - {{ student.academicDetails?.section }}</td>  <!-- ❌ was student.class -->
-    <td>{{ student.personalInfo?.gender }}</td>  <!-- ❌ was student.gender -->
-    <td>{{ student.contactInfo?.mobileNo }}</td>  <!-- ❌ was student.phone -->
-    <td>
-      <span class="badge active">Active</span>  <!-- no status in response, hardcode for now -->
-    </td>
-    <td>
-      <div class="action-btns">
-        <button class="icon-btn view" (click)="viewStudent(student)" title="View">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-          </svg>
-        </button>
-        <button class="icon-btn edit" (click)="editStudent(student)" title="Edit">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
-        </button>
-        <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6"/><path d="M14 11v6"/>
-          </svg>
-        </button>
-      </div>
-    </td>
-  </tr>
-</tbody>
+        <tr *ngFor="let student of students; let i = index">
+          <td class="row-num">{{ i + 1 }}</td>
+          <td>
+            <div class="student-info">
+              <div class="avatar" [style.background]="getAvatarColor(student.personalInfo?.firstName)">
+                {{ student.personalInfo?.firstName?.charAt(0) }}
+              </div>
+              <div>
+                <span class="student-name">{{ student.personalInfo?.firstName }} {{ student.personalInfo?.lastName }}</span>
+                <span class="student-email">{{ student.contactInfo?.emailAddress || '-' }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="roll-no">{{ student.personalInfo?.regNo }}</td>
+          <td>{{ student.academicDetails?.courseOrProgram }} - {{ student.academicDetails?.section }}</td>
+          <td>{{ student.personalInfo?.gender }}</td>
+          <td>{{ student.contactInfo?.mobileNo }}</td>
+          <td>
+            <span class="badge active">Active</span>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="icon-btn view" (click)="viewStudent(student)" title="View">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="icon-btn edit" (click)="editStudent(student)" title="Edit">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <div class="pagination">
-      <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
-      <div class="page-btns">
-        <button class="page-btn">Previous</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">Next</button>
-      </div>
-    </div>
+   <div class="pagination">
+  <div class="page-size-selector">
+    <label>Rows per page:</label>
+    <select >
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+      <option [value]="15">15</option>
+      <option [value]="20">20</option>
+    </select>
+  </div>
+  <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
+  <div class="page-btns">
+    <button class="page-btn">Previous</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">Next</button>
+  </div>
+</div>
   </div>
 
 </div>
@@ -206,7 +228,7 @@
       <div class="modal-step" *ngFor="let step of modalSteps; let i = index"
            [class.active]="modalStep === i"
            [class.done]="modalStep > i"
-           (click)="modalStep = i;onStepClick(i)">
+           (click)="modalStep = i; onStepClick(i)">
         <div class="mstep-circle">
           <svg *ngIf="modalStep > i" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"/>
@@ -217,7 +239,6 @@
       </div>
     </div>
 
-    <!-- ✅ formGroup on <form> tag, NOT on <div> -->
     <form class="modal-body" [formGroup]="form">
 
       <!-- Step 1: Personal Information -->
@@ -226,8 +247,10 @@
         <div class="form-grid">
           <div class="form-field">
             <label>Student ID / Reg No <span class="req">*</span></label>
-            <input type="text" placeholder="e.g. STU2024001" formControlName="studentId"/>
+            <input type="text" placeholder="e.g. STU2024001" formControlName="studentId" (input)="isregnouniqueornot()"/>
             <small class="error" *ngIf="form.get('studentId')?.invalid && form.get('studentId')?.touched">Student ID is required.</small>
+            <small style="color:red;font-size:12px;" *ngIf="regnoExists === false">⛔ Student ID already exists.</small>
+            <small style="color:green;font-size:12px;" *ngIf="regnoExists === true">✅ Student ID is available.</small>
           </div>
           <div class="form-field">
             <label>First Name <span class="req">*</span></label>
@@ -270,7 +293,7 @@
           </div>
           <div class="form-field">
             <label>Nationality</label>
-             <select formControlName="nationality">
+            <select formControlName="nationality">
               <option value="">Select</option>
               <option>Indian</option>
             </select>
@@ -296,7 +319,7 @@
           </div>
           <div class="form-field">
             <label>Alternate Mobile</label>
-            <input type="text" placeholder="Alternate number" formControlName="alternativemobileno" />
+            <input type="text" placeholder="Alternate number" formControlName="alternativemobileno"/>
           </div>
           <div class="form-field">
             <label>Email Address</label>
@@ -318,8 +341,12 @@
           </div>
           <div class="form-field">
             <label>State <span class="req">*</span></label>
-            <input type="text" placeholder="State" formControlName="state"/>
+              <select formControlName="state" >
+                  <option value="" disabled selected hidden>Select State</option>
+                  <option>Tamilnadu</option>
+            </select>
             <small class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">State is required.</small>
+
           </div>
           <div class="form-field">
             <label>Country</label>
@@ -344,7 +371,6 @@
           <div class="form-field">
             <label>Father's Mobile</label>
             <input type="text" placeholder="Father's mobile" formControlName="fathersmobileno"/>
-            <small class="error" *ngIf="form.get('fathersmobileno')?.invalid && form.get('fathersmobileno')?.touched">Father's mobile is required.</small>
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Mother's Information</p>
@@ -356,7 +382,7 @@
           </div>
           <div class="form-field">
             <label>Mother's Mobile</label>
-            <input type="text" placeholder="Mother's mobile" formControlName="mothersmobileno" />
+            <input type="text" placeholder="Mother's mobile" formControlName="mothersmobileno"/>
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Guardian Information</p>
@@ -388,34 +414,30 @@
             <label>Course / Program <span class="req">*</span></label>
             <select formControlName="course" (change)="getDepartments($event)">
               <option value="">Select course</option>
-               <option *ngFor="let c of courses" [value]="c.coursename">
-                  {{ c.coursename }}
-               </option>
-
+              <option *ngFor="let c of courses" [value]="c.coursename">{{ c.coursename }}</option>
             </select>
             <small class="error" *ngIf="form.get('course')?.invalid && form.get('course')?.touched">Course is required.</small>
           </div>
           <div class="form-field">
             <label>Department <span class="req">*</span></label>
             <select formControlName="dept">
-              <option *ngFor="let d of departments" [value]="d.departmentname">
-                  {{d.departmentname}}
-              </option>
+              <option value="">Select department</option>
+              <option *ngFor="let d of departments" [value]="d.departmentname">{{ d.departmentname }}</option>
             </select>
             <small class="error" *ngIf="form.get('dept')?.invalid && form.get('dept')?.touched">Department is required.</small>
           </div>
           <div class="form-field">
-            <label>Year<span class="req">*</span></label>
+            <label>Year <span class="req">*</span></label>
             <select formControlName="year">
               <option value="">Select</option>
-              <option>1st Year</option><option>1st Year </option>
-              <option>2nd Year</option><option>2nd Year </option>
-              <option>3rd Year</option><option>3rd Year </option>
-              <option>4th Year</option><option>4th Year </option>
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
             </select>
             <small class="error" *ngIf="form.get('year')?.invalid && form.get('year')?.touched">Year is required.</small>
           </div>
-           <div class="form-field">
+          <div class="form-field">
             <label>Semester <span class="req">*</span></label>
             <select formControlName="semester">
               <option value="">Select</option>
@@ -463,7 +485,7 @@
           </div>
           <div class="form-field">
             <label>Passport Number</label>
-            <input type="text" placeholder="Optional"  formControlName="PassportNumber"/>
+            <input type="text" placeholder="Optional" formControlName="PassportNumber"/>
           </div>
           <div class="form-field">
             <label>Govt ID Type</label>
@@ -475,7 +497,7 @@
           </div>
           <div class="form-field">
             <label>Govt ID Number</label>
-            <input type="text" placeholder="ID number"  formControlName="GovtIDNumber"/>
+            <input type="text" placeholder="ID number" formControlName="GovtIDNumber"/>
           </div>
         </div>
         <p class="section-title" style="margin-top:18px">Previous Education</p>
@@ -483,51 +505,45 @@
           <h6 style="margin-top:18px;margin-bottom:4px;">SSLC</h6>
           <div class="form-grid">
             <div class="form-field">
-              <label>Previous School<span class="req">*</span></label>
+              <label>Previous School <span class="req">*</span></label>
               <input type="text" placeholder="School name" formControlName="PreviousSchoolofsslc"/>
-             <small class="error" *ngIf="form.get('PreviousSchoolofsslc')?.invalid && form.get('PreviousSchoolofsslc')?.touched">School name is required.</small>
+              <small class="error" *ngIf="form.get('PreviousSchoolofsslc')?.invalid && form.get('PreviousSchoolofsslc')?.touched">School name is required.</small>
             </div>
             <div class="form-field">
-              <label>Board<span class="req">*</span></label>
+              <label>Board <span class="req">*</span></label>
               <input type="text" placeholder="e.g. CBSE, State Board" formControlName="Boardofsslc"/>
               <small class="error" *ngIf="form.get('Boardofsslc')?.invalid && form.get('Boardofsslc')?.touched">Board is required.</small>
-
             </div>
             <div class="form-field">
-              <label>Year of Passing<span class="req">*</span></label>
+              <label>Year of Passing <span class="req">*</span></label>
               <input type="text" placeholder="e.g. 2023" formControlName="YearofPassingofsslc"/>
               <small class="error" *ngIf="form.get('YearofPassingofsslc')?.invalid && form.get('YearofPassingofsslc')?.touched">Year of Passing is required.</small>
-
             </div>
             <div class="form-field">
-              <label>Percentage / CGPA<span class="req">*</span></label>
+              <label>Percentage / CGPA <span class="req">*</span></label>
               <input type="text" placeholder="e.g. 85% or 8.5" formControlName="PercentageCGPAofsslc"/>
               <small class="error" *ngIf="form.get('PercentageCGPAofsslc')?.invalid && form.get('PercentageCGPAofsslc')?.touched">Percentage is required.</small>
-
             </div>
           </div>
           <h6 style="margin-top:18px;margin-bottom:4px;">HSC</h6>
           <div class="form-grid">
             <div class="form-field">
-              <label>Previous School<span class="req">*</span></label>
+              <label>Previous School <span class="req">*</span></label>
               <input type="text" placeholder="School name" formControlName="PreviousSchoolofhsc"/>
               <small class="error" *ngIf="form.get('PreviousSchoolofhsc')?.invalid && form.get('PreviousSchoolofhsc')?.touched">School name is required.</small>
-
             </div>
             <div class="form-field">
-              <label>Board<span class="req">*</span></label>
+              <label>Board <span class="req">*</span></label>
               <input type="text" placeholder="e.g. CBSE, State Board" formControlName="Boardofhsc"/>
               <small class="error" *ngIf="form.get('Boardofhsc')?.invalid && form.get('Boardofhsc')?.touched">Board is required.</small>
-
             </div>
             <div class="form-field">
-              <label>Year of Passing<span class="req">*</span></label>
+              <label>Year of Passing <span class="req">*</span></label>
               <input type="text" placeholder="e.g. 2023" formControlName="YearofPassingofhsc"/>
               <small class="error" *ngIf="form.get('YearofPassingofhsc')?.invalid && form.get('YearofPassingofhsc')?.touched">Year of Passing is required.</small>
-
             </div>
             <div class="form-field">
-              <label>Percentage / CGPA<span class="req">*</span></label>
+              <label>Percentage / CGPA <span class="req">*</span></label>
               <input type="text" placeholder="e.g. 85% or 8.5" formControlName="PercentageCGPAofhsc"/>
               <small class="error" *ngIf="form.get('PercentageCGPAofhsc')?.invalid && form.get('PercentageCGPAofhsc')?.touched">Percentage is required.</small>
             </div>
@@ -562,13 +578,13 @@
         </div>
       </div>
 
-    </form><!-- ✅ closing </form> not </div> -->
+    </form>
 
     <div class="modal-footer">
-      <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1;onStepClick(modalStep)">← Previous</button>
+      <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1; onStepClick(modalStep)">← Previous</button>
       <button class="btn-secondary" (click)="closeModal()">Cancel</button>
       <div style="flex:1"></div>
-      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1 ;onStepClick(modalStep)">Next →</button>
+      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1; onStepClick(modalStep)">Next →</button>
       <button class="btn-primary" *ngIf="modalStep === modalSteps.length - 1" (click)="addstudent()">
         {{ isEditing ? 'Update Student' : 'Add Student' }}
       </button>
@@ -582,6 +598,7 @@
 <!-- ═══════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="showViewModal" (click)="closeViewModal()">
   <div class="modal view-modal" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
       <h2>Student Profile</h2>
       <button class="modal-close" (click)="closeViewModal()">
@@ -590,41 +607,199 @@
         </svg>
       </button>
     </div>
+
     <div class="modal-body" *ngIf="selectedStudent">
+
+      <!-- Profile Header -->
       <div class="profile-header">
-        <div class="profile-avatar" [style.background]="getAvatarColor(selectedStudent!.name)">
-          {{ selectedStudent!.name.charAt(0) }}
+        <div class="profile-avatar" [style.background]="getAvatarColor(selectedStudent?.personalInfo?.firstName)">
+          {{ selectedStudent?.personalInfo?.firstName?.charAt(0) }}
         </div>
         <div class="profile-info">
-          <h3>{{ selectedStudent!.name }}</h3>
-          <p>{{ selectedStudent!.email }}</p>
-          <span class="badge" [class.active]="selectedStudent!.status === 'Active'">{{ selectedStudent!.status }}</span>
+          <h3>{{ selectedStudent?.personalInfo?.firstName }} {{ selectedStudent?.personalInfo?.lastName }}</h3>
+          <p>Reg No: {{ selectedStudent?.personalInfo?.regNo || '-' }}</p>
+          <span class="badge active">Active</span>
         </div>
       </div>
-      <div class="profile-grid">
-        <div class="profile-item"><span class="label">Roll No</span><span class="value">{{ selectedStudent!.rollNo }}</span></div>
-        <div class="profile-item"><span class="label">Class</span><span class="value">{{ selectedStudent!.class }} - {{ selectedStudent!.section }}</span></div>
-        <div class="profile-item"><span class="label">Gender</span><span class="value">{{ selectedStudent!.gender }}</span></div>
-        <div class="profile-item"><span class="label">Phone</span><span class="value">{{ selectedStudent!.phone }}</span></div>
-        <div class="profile-item"><span class="label">Blood Group</span><span class="value">{{ selectedStudent!.bloodGroup }}</span></div>
-        <div class="profile-item"><span class="label">Father</span><span class="value">{{ selectedStudent!.fatherName }}</span></div>
-        <div class="profile-item"><span class="label">Mother</span><span class="value">{{ selectedStudent!.motherName }}</span></div>
-        <div class="profile-item"><span class="label">Parent Phone</span><span class="value">{{ selectedStudent!.parentPhone }}</span></div>
+
+      <!-- 1. Personal Information -->
+      <p class="view-section-title">Personal Information</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Student ID / Reg No</span><span class="view-value">{{ selectedStudent?.personalInfo?.regNo || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">First Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.firstName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Middle Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.middleName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Last Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.lastName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Gender</span><span class="view-value">{{ selectedStudent?.personalInfo?.gender || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Date of Birth</span><span class="view-value">{{ selectedStudent?.personalInfo?.dateOfBirth || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Age</span><span class="view-value">{{ selectedStudent?.personalInfo?.age || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Blood Group</span><span class="view-value">{{ selectedStudent?.personalInfo?.bloodGroup || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Nationality</span><span class="view-value">{{ selectedStudent?.personalInfo?.nationality || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Category / Community</span><span class="view-value">{{ selectedStudent?.personalInfo?.categoryOrCommunity || '-' }}</span></div>
       </div>
-      <div class="summary-cards">
-        <div class="summary-card">
-          <span class="summary-value green">92%</span>
-          <span class="summary-label">Attendance</span>
-        </div>
-        <div class="summary-card">
-          <span class="summary-value purple">78%</span>
-          <span class="summary-label">Avg Marks</span>
-        </div>
-        <div class="summary-card">
-          <span class="summary-value orange">₹2,400</span>
-          <span class="summary-label">Fee Pending</span>
-        </div>
+
+      <!-- 2. Contact Information -->
+      <p class="view-section-title">Contact Information</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Mobile Number</span><span class="view-value">{{ selectedStudent?.contactInfo?.mobileNo || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Alternate Mobile</span><span class="view-value">{{ selectedStudent?.contactInfo?.alternateMobile || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Email Address</span><span class="view-value">{{ selectedStudent?.contactInfo?.emailAddress || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Address Line 1</span><span class="view-value">{{ selectedStudent?.contactInfo?.addressLine1 || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Address Line 2</span><span class="view-value">{{ selectedStudent?.contactInfo?.addressLine2 || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">City</span><span class="view-value">{{ selectedStudent?.contactInfo?.city || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">State</span><span class="view-value">{{ selectedStudent?.contactInfo?.state || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Country</span><span class="view-value">{{ selectedStudent?.contactInfo?.country || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Postal Code</span><span class="view-value">{{ selectedStudent?.contactInfo?.postalCode || '-' }}</span></div>
       </div>
+
+      <!-- 3. Father's Information -->
+      <p class="view-section-title">Father's Information</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Father's Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.fatherName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Father's Mobile</span><span class="view-value">{{ selectedStudent?.parentDetails?.fathersMobileNumber || '-' }}</span></div>
+      </div>
+
+      <!-- Mother's Information -->
+      <p class="view-section-title">Mother's Information</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Mother's Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.mothersName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Mother's Mobile</span><span class="view-value">{{ selectedStudent?.parentDetails?.mothersMobile || '-' }}</span></div>
+      </div>
+
+      <!-- Guardian Information -->
+      <p class="view-section-title">Guardian Information</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Guardian Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.guardianName || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Guardian Phone</span><span class="view-value">{{ selectedStudent?.parentDetails?.guardianPhone || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Relationship</span><span class="view-value">{{ selectedStudent?.parentDetails?.relationship || '-' }}</span></div>
+      </div>
+
+      <!-- 4. Academic Details -->
+      <p class="view-section-title">Academic Details</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Course / Program</span><span class="view-value">{{ selectedStudent?.academicDetails?.courseOrProgram || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Department</span><span class="view-value">{{ selectedStudent?.academicDetails?.department || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Year</span><span class="view-value">{{ selectedStudent?.academicDetails?.year || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Semester</span><span class="view-value">{{ selectedStudent?.academicDetails?.semester || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Section</span><span class="view-value">{{ selectedStudent?.academicDetails?.section || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Roll No</span><span class="view-value">{{ selectedStudent?.academicDetails?.rollNo || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Admission Date</span><span class="view-value">{{ selectedStudent?.academicDetails?.admissionDate || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Admission Type</span><span class="view-value">{{ selectedStudent?.academicDetails?.admissionType || '-' }}</span></div>
+      </div>
+
+      <!-- 5. Identification Details -->
+      <p class="view-section-title">Identification Details</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Aadhaar Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.aadhaarNumber || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Passport Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.passportNumber || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Govt ID Type</span><span class="view-value">{{ selectedStudent?.identificationDetails?.govtIDType || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Govt ID Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.govtIDNumber || '-' }}</span></div>
+      </div>
+
+      <!-- Previous Education - SSLC -->
+      <p class="view-section-title">Previous Education — SSLC</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Previous School</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcSchool || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Board</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcBoard || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcYearOfPassing || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcPercentageOrCGPA || '-' }}</span></div>
+      </div>
+
+      <!-- Previous Education - HSC -->
+      <p class="view-section-title">Previous Education — HSC</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Previous School</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscSchool || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Board</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscBoard || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscYearOfPassing || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscPercentageOrCGPA || '-' }}</span></div>
+      </div>
+
+      <!-- Previous Degree -->
+      <p class="view-section-title">Previous Degree</p>
+      <div class="view-grid">
+        <div class="view-item"><span class="view-label">Degree</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousDegree || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Department</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousDepartment || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Previous Institution</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousInstitution || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">University</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousUniversity || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousYearOfPassing || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousPercentageOrCGPA || '-' }}</span></div>
+      </div>
+
     </div>
+
+    <div class="modal-footer">
+      <div style="flex:1"></div>
+      <button class="btn-secondary" (click)="closeViewModal()">Close</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- Import Students Modal                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showImportModal" (click)="closeImportModal()">
+  <div class="modal" style="max-width:460px;" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>Import Students</h2>
+      <button class="modal-close" (click)="closeImportModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-field" style="margin-bottom:16px;">
+        <label>File Type</label>
+        <select [(ngModel)]="importFileType">
+          <option value="excel">Excel (.xlsx / .xls)</option>
+          <option value="json">JSON (.json)</option>
+          <option value="csv">CSV (.csv)</option>
+        </select>
+      </div>
+
+      <div #uploadArea
+           class="upload-area"
+           (click)="importFileInput.click()"
+           (dragover)="$event.preventDefault()"
+           (drop)="onImportFileDrop($event)"
+           (mouseenter)="uploadArea.style.borderColor='#6366f1'"
+           (mouseleave)="uploadArea.style.borderColor='#cbd5e1'"
+           style="border:2px dashed #cbd5e1; border-radius:10px; padding:36px 20px;
+                  text-align:center; cursor:pointer; transition:border-color .2s;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p style="margin:0;font-weight:600;color:#475569;">Click or drag & drop your file here</p>
+        <p style="margin:6px 0 0;font-size:13px;color:#94a3b8;">
+          Supported: {{ importFileType === 'excel' ? '.xlsx, .xls' : importFileType === 'json' ? '.json' : '.csv' }}
+        </p>
+        <p *ngIf="importFileName" style="margin:10px 0 0;font-size:13px;color:#6366f1;font-weight:500;">
+          📄 {{ importFileName }}
+        </p>
+      </div>
+
+      <input #importFileInput type="file"
+             [accept]="importFileType === 'excel' ? '.xlsx,.xls' : importFileType === 'json' ? '.json' : '.csv'"
+             style="display:none"
+             (change)="onImportFileSelect($event)"/>
+
+      <p style="font-size:12px;color:#94a3b8;margin-top:14px;margin-bottom:0;">
+        Make sure the file follows the required template format.
+        <a href="#" (click)="downloadTemplate($event)" style="color:#6366f1;">Download template</a>
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeImportModal()">Cancel</button>
+      <div style="flex:1"></div>
+      <button class="btn-primary" (click)="submitImport()" [disabled]="!importFileName">
+        Upload & Import
+      </button>
+    </div>
+
   </div>
 </div>
