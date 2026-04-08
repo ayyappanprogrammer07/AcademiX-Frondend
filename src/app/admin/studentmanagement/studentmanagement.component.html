@@ -49,26 +49,26 @@
       </div>
     </div>
     <div class="stat-card">
-     <div class="stat-icon blue">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="7" r="4"/>
-        <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
-      </svg>
-    </div>
+      <div class="stat-icon blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
+        </svg>
+      </div>
       <div class="stat-info">
         <span class="stat-value">{{boyscount}}</span>
         <span class="stat-label">Boys</span>
       </div>
     </div>
     <div class="stat-card">
-     <div class="stat-icon pink">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="7" r="4"/>
-        <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
-        <line x1="12" y1="16" x2="12" y2="21"/>
-        <line x1="9" y1="19" x2="15" y2="19"/>
-      </svg>
-    </div>
+      <div class="stat-icon pink">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
+          <line x1="12" y1="16" x2="12" y2="21"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+        </svg>
+      </div>
       <div class="stat-info">
         <span class="stat-value">{{girlscount}}</span>
         <span class="stat-label">Girls</span>
@@ -159,9 +159,7 @@
           <td>{{ student.academicDetails?.courseOrProgram }} - {{ student.academicDetails?.section }}</td>
           <td>{{ student.personalInfo?.gender }}</td>
           <td>{{ student.contactInfo?.mobileNo }}</td>
-          <td>
-            <span class="badge active">Active</span>
-          </td>
+          <td><span class="badge active">Active</span></td>
           <td>
             <div class="action-btns">
               <button class="icon-btn view" (click)="viewStudent(student)" title="View">
@@ -175,7 +173,7 @@
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
               </button>
-              <button class="icon-btn delete" (click)="deleteStudent(student)" title="Deactivate">
+              <button class="icon-btn delete" (click)="deleteStudent(student)" title="Delete">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                   <path d="M10 11v6"/><path d="M14 11v6"/>
@@ -186,25 +184,24 @@
         </tr>
       </tbody>
     </table>
-   <div class="pagination">
-  <div class="page-size-selector">
-    <label>Rows per page:</label>
-    <select >
-      <option [value]="5">5</option>
-      <option [value]="10">10</option>
-      <option [value]="15">15</option>
-      <option [value]="20">20</option>
-    </select>
-  </div>
-  <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
-  <div class="page-btns">
-    <button class="page-btn">Previous</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">Next</button>
-  </div>
-</div>
+
+    <div class="pagination">
+      <div class="page-size-selector">
+        <label>Rows per page:</label>
+        <select [(ngModel)]="pagesize" (change)="onCountChange()">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="15">15</option>
+          <option [value]="20">20</option>
+        </select>
+      </div>
+      <span class="page-info">Showing {{ filteredStudents.length }} of {{ students.length }} students</span>
+      <div class="page-btns">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+        <button *ngFor="let page of pagesArray" class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -241,48 +238,93 @@
 
     <form class="modal-body" [formGroup]="form">
 
-      <!-- Step 1: Personal Information -->
+      <!-- ═══ Step 1: Personal Information ═══ -->
       <div *ngIf="modalStep === 0">
         <p class="section-title">Personal Information</p>
         <div class="form-grid">
+
+          <!-- Student ID -->
           <div class="form-field">
             <label>Student ID / Reg No <span class="req">*</span></label>
             <input type="text" placeholder="e.g. STU2024001" formControlName="studentId" (input)="isregnouniqueornot()"/>
             <small class="error" *ngIf="form.get('studentId')?.invalid && form.get('studentId')?.touched">Student ID is required.</small>
-            <small style="color:red;font-size:12px;" *ngIf="regnoExists === false">⛔ Student ID already exists.</small>
+            <small style="color:red;font-size:12px;"   *ngIf="regnoExists === false">⛔ Student ID already exists.</small>
             <small style="color:green;font-size:12px;" *ngIf="regnoExists === true">✅ Student ID is available.</small>
           </div>
+
+          <!-- First Name -->
           <div class="form-field">
             <label>First Name <span class="req">*</span></label>
             <input type="text" placeholder="First name" formControlName="Firstname"/>
             <small class="error" *ngIf="form.get('Firstname')?.invalid && form.get('Firstname')?.touched">First name is required.</small>
           </div>
+
+          <!-- Middle Name -->
           <div class="form-field">
             <label>Middle Name</label>
             <input type="text" placeholder="Middle name (optional)" formControlName="middlename"/>
           </div>
+
+          <!-- Last Name -->
           <div class="form-field">
             <label>Last Name <span class="req">*</span></label>
             <input type="text" placeholder="Last name" formControlName="lastname"/>
             <small class="error" *ngIf="form.get('lastname')?.invalid && form.get('lastname')?.touched">Last name is required.</small>
           </div>
+
+          <!-- Gender -->
           <div class="form-field">
             <label>Gender <span class="req">*</span></label>
-            <select formControlName="gender">
-              <option value="">Select gender</option>
-              <option>Male</option><option>Female</option><option>Other</option>
-            </select>
+            <ng-select
+              [items]="genders"
+              formControlName="gender"
+              placeholder="Select gender"
+              [clearable]="false"
+              [searchable]="false"
+              [editableSearchTerm]="false">
+            </ng-select>
             <small class="error" *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched">Gender is required.</small>
           </div>
+
+          <!-- ✅ Date of Birth — triggers calcAge() -->
           <div class="form-field">
             <label>Date of Birth <span class="req">*</span></label>
-            <input type="date" formControlName="DOB" (change)="calcAge()"/>
-            <small class="error" *ngIf="form.get('DOB')?.invalid && form.get('DOB')?.touched">Date of birth is required.</small>
+            <input
+              type="date"
+              formControlName="DOB"
+              (change)="calcAge()"
+              [class.input-invalid]="form.get('DOB')?.invalid && form.get('DOB')?.touched"
+            />
+            <small class="error" *ngIf="form.get('DOB')?.errors?.['required'] && form.get('DOB')?.touched">
+              Date of birth is required.
+            </small>
           </div>
+
+          <!-- ✅ Age — Auto-calculated with validation feedback -->
           <div class="form-field">
             <label>Age (Auto-calculated)</label>
-            <input type="text" formControlName="age" placeholder="Auto from DOB" readonly class="readonly-field"/>
+            <input
+              type="text"
+              formControlName="age"
+              placeholder="Auto from DOB"
+              readonly
+              [ngClass]="{
+                'readonly-field': true,
+                'age-invalid': !isAgeValid && form.get('age')?.value > 0,
+                'age-valid':    isAgeValid && form.get('age')?.value > 0
+              }"
+            />
+            <!-- ✅ Error shown instantly below Age field -->
+            <small class="age-error-text" *ngIf="ageError">
+              ⛔ {{ ageError }}
+            </small>
+            <!-- ✅ Success shown when age is valid -->
+            <small class="age-success-text" *ngIf="isAgeValid && form.get('age')?.value > 0">
+              ✅ Age is valid.
+            </small>
           </div>
+
+          <!-- Blood Group -->
           <div class="form-field">
             <label>Blood Group</label>
             <select formControlName="bloodgroup">
@@ -291,6 +333,8 @@
               <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
             </select>
           </div>
+
+          <!-- Nationality -->
           <div class="form-field">
             <label>Nationality</label>
             <select formControlName="nationality">
@@ -298,6 +342,8 @@
               <option>Indian</option>
             </select>
           </div>
+
+          <!-- Community -->
           <div class="form-field">
             <label>Category / Community</label>
             <select formControlName="Community">
@@ -305,10 +351,11 @@
               <option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option>
             </select>
           </div>
+
         </div>
       </div>
 
-      <!-- Step 2: Contact Information -->
+      <!-- ═══ Step 2: Contact Information ═══ -->
       <div *ngIf="modalStep === 1">
         <p class="section-title">Contact Information</p>
         <div class="form-grid">
@@ -341,12 +388,11 @@
           </div>
           <div class="form-field">
             <label>State <span class="req">*</span></label>
-              <select formControlName="state" >
-                  <option value="" disabled selected hidden>Select State</option>
-                  <option>Tamilnadu</option>
+            <select formControlName="state">
+              <option value="" disabled selected hidden>Select State</option>
+              <option>Tamilnadu</option>
             </select>
             <small class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">State is required.</small>
-
           </div>
           <div class="form-field">
             <label>Country</label>
@@ -359,7 +405,7 @@
         </div>
       </div>
 
-      <!-- Step 3: Parent / Guardian -->
+      <!-- ═══ Step 3: Parent / Guardian ═══ -->
       <div *ngIf="modalStep === 2">
         <p class="section-title">Father's Information</p>
         <div class="form-grid">
@@ -406,7 +452,7 @@
         </div>
       </div>
 
-      <!-- Step 4: Academic Details -->
+      <!-- ═══ Step 4: Academic Details ═══ -->
       <div *ngIf="modalStep === 3">
         <p class="section-title">Academic Details</p>
         <div class="form-grid">
@@ -430,10 +476,7 @@
             <label>Year <span class="req">*</span></label>
             <select formControlName="year">
               <option value="">Select</option>
-              <option>1st Year</option>
-              <option>2nd Year</option>
-              <option>3rd Year</option>
-              <option>4th Year</option>
+              <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
             </select>
             <small class="error" *ngIf="form.get('year')?.invalid && form.get('year')?.touched">Year is required.</small>
           </div>
@@ -441,10 +484,8 @@
             <label>Semester <span class="req">*</span></label>
             <select formControlName="semester">
               <option value="">Select</option>
-              <option>Sem 1</option><option>Sem 2</option>
-              <option>Sem 3</option><option>Sem 4</option>
-              <option>Sem 5</option><option>Sem 6</option>
-              <option>Sem 7</option><option>Sem 8</option>
+              <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option><option>Sem 4</option>
+              <option>Sem 5</option><option>Sem 6</option><option>Sem 7</option><option>Sem 8</option>
             </select>
             <small class="error" *ngIf="form.get('semester')?.invalid && form.get('semester')?.touched">Semester is required.</small>
           </div>
@@ -475,7 +516,7 @@
         </div>
       </div>
 
-      <!-- Step 5: Identification & Previous Education -->
+      <!-- ═══ Step 5: Identification & Previous Education ═══ -->
       <div *ngIf="modalStep === 4">
         <p class="section-title">Identification Details</p>
         <div class="form-grid">
@@ -500,6 +541,7 @@
             <input type="text" placeholder="ID number" formControlName="GovtIDNumber"/>
           </div>
         </div>
+
         <p class="section-title" style="margin-top:18px">Previous Education</p>
         <div class="form-grid1">
           <h6 style="margin-top:18px;margin-bottom:4px;">SSLC</h6>
@@ -525,6 +567,7 @@
               <small class="error" *ngIf="form.get('PercentageCGPAofsslc')?.invalid && form.get('PercentageCGPAofsslc')?.touched">Percentage is required.</small>
             </div>
           </div>
+
           <h6 style="margin-top:18px;margin-bottom:4px;">HSC</h6>
           <div class="form-grid">
             <div class="form-field">
@@ -548,6 +591,7 @@
               <small class="error" *ngIf="form.get('PercentageCGPAofhsc')?.invalid && form.get('PercentageCGPAofhsc')?.touched">Percentage is required.</small>
             </div>
           </div>
+
           <h6 style="margin-top:18px;margin-bottom:4px;">Previous Degree</h6>
           <div class="form-grid">
             <div class="form-field">
@@ -584,7 +628,15 @@
       <button class="btn-secondary" *ngIf="modalStep > 0" (click)="modalStep = modalStep - 1; onStepClick(modalStep)">← Previous</button>
       <button class="btn-secondary" (click)="closeModal()">Cancel</button>
       <div style="flex:1"></div>
-      <button class="btn-primary" *ngIf="modalStep < modalSteps.length - 1" (click)="modalStep = modalStep + 1; onStepClick(modalStep)">Next →</button>
+      <!-- ✅ Next button blocked on Step 1 if age is invalid -->
+      <button
+        class="btn-primary"
+        *ngIf="modalStep < modalSteps.length - 1"
+        [disabled]="modalStep === 0 && !isAgeValid && form.get('age')?.value > 0"
+        [title]="modalStep === 0 && !isAgeValid && form.get('age')?.value > 0 ? 'Age must be greater than 18' : ''"
+        (click)="modalStep = modalStep + 1; onStepClick(modalStep)">
+        Next →
+      </button>
       <button class="btn-primary" *ngIf="modalStep === modalSteps.length - 1" (click)="addstudent()">
         {{ isEditing ? 'Update Student' : 'Add Student' }}
       </button>
@@ -610,7 +662,6 @@
 
     <div class="modal-body" *ngIf="selectedStudent">
 
-      <!-- Profile Header -->
       <div class="profile-header">
         <div class="profile-avatar" [style.background]="getAvatarColor(selectedStudent?.personalInfo?.firstName)">
           {{ selectedStudent?.personalInfo?.firstName?.charAt(0) }}
@@ -622,10 +673,9 @@
         </div>
       </div>
 
-      <!-- 1. Personal Information -->
       <p class="view-section-title">Personal Information</p>
       <div class="view-grid">
-        <div class="view-item"><span class="view-label">Student ID / Reg No</span><span class="view-value">{{ selectedStudent?.personalInfo?.regNo || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Student ID</span><span class="view-value">{{ selectedStudent?.personalInfo?.regNo || '-' }}</span></div>
         <div class="view-item"><span class="view-label">First Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.firstName || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Middle Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.middleName || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Last Name</span><span class="view-value">{{ selectedStudent?.personalInfo?.lastName || '-' }}</span></div>
@@ -637,46 +687,33 @@
         <div class="view-item"><span class="view-label">Category / Community</span><span class="view-value">{{ selectedStudent?.personalInfo?.categoryOrCommunity || '-' }}</span></div>
       </div>
 
-      <!-- 2. Contact Information -->
       <p class="view-section-title">Contact Information</p>
       <div class="view-grid">
-        <div class="view-item"><span class="view-label">Mobile Number</span><span class="view-value">{{ selectedStudent?.contactInfo?.mobileNo || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Mobile</span><span class="view-value">{{ selectedStudent?.contactInfo?.mobileNo || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Alternate Mobile</span><span class="view-value">{{ selectedStudent?.contactInfo?.alternateMobile || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Email Address</span><span class="view-value">{{ selectedStudent?.contactInfo?.emailAddress || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Email</span><span class="view-value">{{ selectedStudent?.contactInfo?.emailAddress || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Address Line 1</span><span class="view-value">{{ selectedStudent?.contactInfo?.addressLine1 || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Address Line 2</span><span class="view-value">{{ selectedStudent?.contactInfo?.addressLine2 || '-' }}</span></div>
         <div class="view-item"><span class="view-label">City</span><span class="view-value">{{ selectedStudent?.contactInfo?.city || '-' }}</span></div>
         <div class="view-item"><span class="view-label">State</span><span class="view-value">{{ selectedStudent?.contactInfo?.state || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Country</span><span class="view-value">{{ selectedStudent?.contactInfo?.country || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Postal Code</span><span class="view-value">{{ selectedStudent?.contactInfo?.postalCode || '-' }}</span></div>
       </div>
 
-      <!-- 3. Father's Information -->
       <p class="view-section-title">Father's Information</p>
       <div class="view-grid">
         <div class="view-item"><span class="view-label">Father's Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.fatherName || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Father's Mobile</span><span class="view-value">{{ selectedStudent?.parentDetails?.fathersMobileNumber || '-' }}</span></div>
       </div>
 
-      <!-- Mother's Information -->
       <p class="view-section-title">Mother's Information</p>
       <div class="view-grid">
         <div class="view-item"><span class="view-label">Mother's Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.mothersName || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Mother's Mobile</span><span class="view-value">{{ selectedStudent?.parentDetails?.mothersMobile || '-' }}</span></div>
       </div>
 
-      <!-- Guardian Information -->
-      <p class="view-section-title">Guardian Information</p>
-      <div class="view-grid">
-        <div class="view-item"><span class="view-label">Guardian Name</span><span class="view-value">{{ selectedStudent?.parentDetails?.guardianName || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Guardian Phone</span><span class="view-value">{{ selectedStudent?.parentDetails?.guardianPhone || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Relationship</span><span class="view-value">{{ selectedStudent?.parentDetails?.relationship || '-' }}</span></div>
-      </div>
-
-      <!-- 4. Academic Details -->
       <p class="view-section-title">Academic Details</p>
       <div class="view-grid">
-        <div class="view-item"><span class="view-label">Course / Program</span><span class="view-value">{{ selectedStudent?.academicDetails?.courseOrProgram || '-' }}</span></div>
+        <div class="view-item"><span class="view-label">Course</span><span class="view-value">{{ selectedStudent?.academicDetails?.courseOrProgram || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Department</span><span class="view-value">{{ selectedStudent?.academicDetails?.department || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Year</span><span class="view-value">{{ selectedStudent?.academicDetails?.year || '-' }}</span></div>
         <div class="view-item"><span class="view-label">Semester</span><span class="view-value">{{ selectedStudent?.academicDetails?.semester || '-' }}</span></div>
@@ -686,51 +723,12 @@
         <div class="view-item"><span class="view-label">Admission Type</span><span class="view-value">{{ selectedStudent?.academicDetails?.admissionType || '-' }}</span></div>
       </div>
 
-      <!-- 5. Identification Details -->
-      <p class="view-section-title">Identification Details</p>
-      <div class="view-grid">
-        <div class="view-item"><span class="view-label">Aadhaar Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.aadhaarNumber || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Passport Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.passportNumber || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Govt ID Type</span><span class="view-value">{{ selectedStudent?.identificationDetails?.govtIDType || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Govt ID Number</span><span class="view-value">{{ selectedStudent?.identificationDetails?.govtIDNumber || '-' }}</span></div>
-      </div>
-
-      <!-- Previous Education - SSLC -->
-      <p class="view-section-title">Previous Education — SSLC</p>
-      <div class="view-grid">
-        <div class="view-item"><span class="view-label">Previous School</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcSchool || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Board</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcBoard || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcYearOfPassing || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.sslcPercentageOrCGPA || '-' }}</span></div>
-      </div>
-
-      <!-- Previous Education - HSC -->
-      <p class="view-section-title">Previous Education — HSC</p>
-      <div class="view-grid">
-        <div class="view-item"><span class="view-label">Previous School</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscSchool || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Board</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscBoard || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscYearOfPassing || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.hscPercentageOrCGPA || '-' }}</span></div>
-      </div>
-
-      <!-- Previous Degree -->
-      <p class="view-section-title">Previous Degree</p>
-      <div class="view-grid">
-        <div class="view-item"><span class="view-label">Degree</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousDegree || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Department</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousDepartment || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Previous Institution</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousInstitution || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">University</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousUniversity || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Year of Passing</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousYearOfPassing || '-' }}</span></div>
-        <div class="view-item"><span class="view-label">Percentage / CGPA</span><span class="view-value">{{ selectedStudent?.identificationDetails?.previousPercentageOrCGPA || '-' }}</span></div>
-      </div>
-
     </div>
 
     <div class="modal-footer">
       <div style="flex:1"></div>
       <button class="btn-secondary" (click)="closeViewModal()">Close</button>
     </div>
-
   </div>
 </div>
 
@@ -796,10 +794,7 @@
     <div class="modal-footer">
       <button class="btn-secondary" (click)="closeImportModal()">Cancel</button>
       <div style="flex:1"></div>
-      <button class="btn-primary" (click)="submitImport()" [disabled]="!importFileName">
-        Upload & Import
-      </button>
+      <button class="btn-primary" (click)="submitImport()" [disabled]="!importFileName">Upload & Import</button>
     </div>
-
   </div>
 </div>

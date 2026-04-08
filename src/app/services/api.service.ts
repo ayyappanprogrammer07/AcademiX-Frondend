@@ -96,10 +96,10 @@ export class ApiService {
     return this.httpclient.post(url,data);
   }
 
-  public deleteStudent()
+  public deleteStudent(regno:any)
   {
      let baseurl = environment.baseUrl;
-    let url = `${baseurl}academix/studentmanagement/Makestudentinactive`
+    let url = `${baseurl}academix/studentmanagement/Makestudentinactive?regno=${regno}`
     console.log(url);
     return this.httpclient.delete(url);
   }

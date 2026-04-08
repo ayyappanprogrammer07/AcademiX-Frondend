@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { CoreRoutingModule } from './core-routing.module';
 import { CoreComponent } from './core.component';
 import { FormsModule } from '@angular/forms';
-import { StudentmanagementComponent } from '../studentmanagement/studentmanagement.component';
+import { StudentmanagementComponent } from '../admin/studentmanagement/studentmanagement.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     CoreComponent,
@@ -15,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     CoreRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
   ]
 })
 export class CoreModule { }

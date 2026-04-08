@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoreComponent } from './core.component';
 import { LoginComponent } from '../login/login.component';
 import { AdminmainComponent } from '../admin/adminmain/adminmain.component';
-import { StudentmanagementComponent } from '../studentmanagement/studentmanagement.component'; 
+import { StudentmanagementComponent } from '../admin/studentmanagement/studentmanagement.component'; 
 
 const routes: Routes = [
   {
