@@ -52,7 +52,12 @@
   transition: background 0.2s;
 }
 
-.btn-primary:hover { background: #5b21b6; }
+.btn-primary:hover:not(:disabled) { background: #5b21b6; }
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   background: #f1f5f9;
@@ -198,7 +203,6 @@
 }
 
 .student-table tbody tr:last-child td { border-bottom: none; }
-
 .student-table tbody tr:hover { background: #faf9ff; }
 
 .row-num { color: #94a3b8; font-size: 12px; }
@@ -282,6 +286,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
+  margin-top: 16px;
   border-top: 1px solid #f1f5f9;
 }
 
@@ -301,8 +306,27 @@
   transition: all 0.2s;
 }
 
-.page-btn:hover { background: #f5f3ff; color: #7C3AED; border-color: #ede9fe; }
+.page-btn:hover  { background: #f5f3ff; color: #7C3AED; border-color: #ede9fe; }
 .page-btn.active { background: #7C3AED; color: #fff; border-color: #7C3AED; }
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.page-size-selector select {
+  padding: 5px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+}
 
 /* ── Modal ── */
 .modal-overlay {
@@ -319,7 +343,7 @@
 .modal {
   background: #fff;
   border-radius: 16px;
-  width: 680px;
+  width: 700px;
   max-width: 95vw;
   max-height: 90vh;
   display: flex;
@@ -374,13 +398,9 @@
   margin: 16px 0 12px;
 }
 
-.error
-{
-  color: red;
-  font-size: 10px;
-}
 .section-title:first-child { margin-top: 0; }
 
+/* ── Form Grid ── */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -414,109 +434,72 @@
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
 }
 
+.req { color: #ef4444; margin-left: 2px; }
+
+.readonly-field {
+  background: #f8f7ff !important;
+  color: #7C3AED;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  font-size: 10px;
+}
+
+/* ── ✅ Age Validation Styles ─────────────────────────────────────── */
+.input-invalid {
+  border-color: #dc3545 !important;
+}
+
+.age-invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5 !important;
+  color: #dc3545 !important;
+  font-weight: 700;
+}
+
+.age-valid {
+  border: 2px solid #28a745 !important;
+  background-color: #f0fff4 !important;
+  color: #28a745 !important;
+  font-weight: 700;
+}
+
+.age-error-text {
+  color: #dc3545;
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 3px;
+  display: block;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.age-success-text {
+  color: #28a745;
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 3px;
+  display: block;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* ────────────────────────────────────────────────────────────────── */
+
+/* ── Modal Footer ── */
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
   padding: 16px 24px;
   border-top: 1px solid #ede9fe;
 }
 
-/* ── View Modal Profile ── */
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ede9fe;
-}
-
-.profile-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-info h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e1033;
-}
-
-.profile-info p {
-  font-size: 12px;
-  color: #94a3b8;
-  margin: 2px 0 6px;
-}
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.profile-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  background: #f8f7ff;
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-
-.profile-item .label {
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.profile-item .value {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1e1033;
-}
-
-.summary-cards {
-  display: flex;
-  gap: 10px;
-}
-
-.summary-card {
-  flex: 1;
-  background: #f8f7ff;
-  border: 1px solid #ede9fe;
-  border-radius: 10px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.summary-value {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.summary-value.green  { color: #059669; }
-.summary-value.purple { color: #7C3AED; }
-.summary-value.orange { color: #D97706; }
-
-.summary-label {
-  font-size: 11px;
-  color: #94a3b8;
-  font-weight: 500;
-}
 /* ── Modal Steps ── */
 .modal-steps {
   display: flex;
@@ -582,69 +565,7 @@
   font-weight: 600;
 }
 
-/* ── Modal size ── */
-.modal {
-  width: 700px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 24px;
-}
-
-/* ── Form Grid ── */
-/* .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-} */
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-field label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #475569;
-}
-
-.form-field input,
-.form-field select {
-  padding: 9px 12px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Sora', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.form-field input:focus,
-.form-field select:focus {
-  border-color: #7C3AED;
-}
-
-.req { color: #ef4444; margin-left: 2px; }
-.readonly-field { background: #f8f7ff !important; color: #7C3AED; font-weight: 600; cursor: not-allowed; }
-
-/* ── Modal Footer ── */
-.modal-footer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 24px;
-  border-top: 1px solid #f1f5f9;
-}
-
-
-/* ── View Modal Section Titles ─────────────────────────────── */
+/* ── View Modal ── */
 .view-section-title {
   font-size: 11px;
   font-weight: 600;
@@ -658,7 +579,6 @@
   border-radius: 0 6px 6px 0;
 }
 
-/* ── View Grid ─────────────────────────────────────────────── */
 .view-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -670,12 +590,7 @@
   border-radius: 8px;
 }
 
-/* ── View Items ────────────────────────────────────────────── */
-.view-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
+.view-item { display: flex; flex-direction: column; gap: 3px; }
 
 .view-label {
   font-size: 11px;
@@ -689,7 +604,6 @@
   font-weight: 400;
 }
 
-/* ── Profile Header ────────────────────────────────────────── */
 .profile-header {
   display: flex;
   align-items: center;
@@ -699,6 +613,18 @@
   background: linear-gradient(135deg, #ede9fe, #f5f3ff);
   border-radius: 10px;
   border: 1px solid #ddd6fe;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-info h3 {
@@ -714,29 +640,27 @@
   color: #6d28d9;
 }
 
-.page-size-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #64748b;
+/* ── NG-SELECT Fix ── */
+.ng-select.ng-select-single .ng-select-container {
+  height: 36px !important;
+  min-height: 36px !important;
 }
-.page-size-selector select {
-  padding: 5px 10px;
-  border: 1px solid #e2e8f0;
-  border-radius: 7px;
-  font-size: 13px;
-  color: #374151;
-  background: #fff;
-  cursor: pointer;
-  outline: none;
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container,
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+  font-size: 13px !important;
+  line-height: 36px !important;
 }
-.page-size-selector select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99,102,241,0.1);
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-placeholder {
+  font-size: 13px !important;
+  line-height: 36px !important;
+  color: #999 !important;
 }
-.pagination {
-  margin-top: 16px;  /* ← add this */
-  padding-top: 16px;
-  border-top: 1px solid #f1f5f9;
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  line-height: 20px !important;
 }
