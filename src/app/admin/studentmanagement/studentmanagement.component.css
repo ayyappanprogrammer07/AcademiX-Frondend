@@ -664,3 +664,23 @@
   min-height: 36px !important;
   line-height: 20px !important;
 }
+
+.date-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.today-btn {
+  padding: 6px 14px;
+  background-color: #6750A4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.today-btn:hover {
+  background-color: #4f378b;
+}

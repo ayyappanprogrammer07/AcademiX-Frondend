@@ -62,27 +62,47 @@ export class StudentmanagementComponent implements OnInit {
   isAgeValid: boolean = false;
   // ─────────────────────────────────────────────────────────────────────────────
 
+  // ── ✅ Year → Semester Dependent Dropdown ────────────────────────────────────
+  semesterMap: { [key: string]: { value: string; label: string }[] } = {
+    '1st Year': [
+      { value: 'Sem 1', label: 'Sem 1' },
+      { value: 'Sem 2', label: 'Sem 2' }
+    ],
+    '2nd Year': [
+      { value: 'Sem 3', label: 'Sem 3' },
+      { value: 'Sem 4', label: 'Sem 4' }
+    ],
+    '3rd Year': [
+      { value: 'Sem 5', label: 'Sem 5' },
+      { value: 'Sem 6', label: 'Sem 6' }
+    ],
+    '4th Year': [
+      { value: 'Sem 7', label: 'Sem 7' },
+      { value: 'Sem 8', label: 'Sem 8' }
+    ]
+  };
+
+  availableSemesters: { value: string; label: string }[] = [];
+  // ─────────────────────────────────────────────────────────────────────────────
+  City = ['Chennai','Ariyalur','Chengalpattu',
+'Coimbatore','Cuddalore','Dharmapuri',
+'Dindigul','Erode','Kallakurichi',
+'Kanchipuram','Kanyakumari','Karur',
+'Krishnagiri','Madurai','Mayiladuthurai',
+'Nagapattinam','Namakkal','Nilgiris',
+'Perambalur','Pudukkottai','Ramanathapuram',
+'Ranipet','Salem','Sivaganga',
+'Tenkasi','Thanjavur','Theni',
+'Thoothukudi','Tiruchirappalli','Tirunelveli',
+'Tirupathur','Tiruppur','Tiruvallur','Tiruvannamalai','Tiruvarur',
+'Vellore','Viluppuram','Virudhunagar'
+]
   constructor(
     private router: Router,
     private formbuilder: FormBuilder,
     private toastrservice: ToastrService,
     private apiservice: ApiService
   ) {}
-
-  onCountChange() {
-    console.log(this.pagesize);
-    this.getpage();
-  }
-
-  getpage() {
-    this.totalPages = Math.ceil(this.totalstuentscount / this.pagesize);
-    this.pagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-    console.log('Navigating to page:', page);
-  }
 
   ngOnInit() {
     this.filteredStudents = [...this.students];
@@ -99,6 +119,82 @@ export class StudentmanagementComponent implements OnInit {
     this.onCountChange();
   }
 
+  // ── ADD STUDENT LOGICS ───────────────────────────────────────────────────────
+
+  formatPostalCode(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '');
+  value = value.substring(0, 6);
+  if (value.length > 3) {
+    value = `${value.slice(0, 3)} ${value.slice(3)}`;
+  }
+  this.form.get('PostalCode')?.setValue(value, { emitEvent: false });
+}
+
+  setToday(): void {
+    const today = new Date().toISOString().split('T')[0];
+    this.form.get('admisiondate')?.setValue(today);
+  }
+
+  // Allow Numbers Only
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.charCode;
+    return charCode >= 48 && charCode <= 57;
+  }
+
+  // Auto-insert spaces after every 4 digits
+  formatAadhaar(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    value = value.substring(0, 12);
+    if (value.length > 8) {
+      value = `${value.slice(0, 4)} ${value.slice(4, 8)} ${value.slice(8)}`;
+    } else if (value.length > 4) {
+      value = `${value.slice(0, 4)} ${value.slice(4)}`;
+    }
+    this.form.get('AadhaarNumber')?.setValue(value, { emitEvent: false });
+  }
+
+  // Allow only: A-Z for 1st char, 0-9 after that
+  allowPassportChars(event: KeyboardEvent): boolean {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    const charCode = event.charCode;
+    if (currentValue.length === 0) {
+      return charCode >= 65 && charCode <= 90;
+    } else {
+      return charCode >= 48 && charCode <= 57;
+    }
+  }
+
+  // Auto uppercase the first character
+  formatPassport(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase();
+    value = value.replace(/[^A-Z0-9]/g, '');
+    if (value.length > 0) {
+      const first = value[0].replace(/[^A-Z]/g, '');
+      const rest = value.slice(1).replace(/[^0-9]/g, '');
+      value = first + rest;
+    }
+    this.form.get('PassportNumber')?.setValue(value, { emitEvent: false });
+  }
+
+  onCountChange() {
+    console.log(this.pagesize);
+    this.getpage();
+  }
+
+  getpage() {
+    this.totalPages = Math.ceil(this.totalstuentscount / this.pagesize);
+    this.pagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    console.log('Navigating to page:', page);
+  }
+
   formValidation() {
     this.form = this.formbuilder.group({
       studentId:            ['', Validators.required],
@@ -112,22 +208,22 @@ export class StudentmanagementComponent implements OnInit {
       nationality:          [''],
       Community:            [''],
 
-      mobileno:             ['', Validators.required],
-      alternativemobileno:  [''],
-      emailaddress:         [''],
+      mobileno: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],      
+      alternativemobileno:  ['',Validators.pattern('^[0-9]{10}$')],
+      emailaddress:         ['', Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)],
       addressline1:         ['', Validators.required],
       addressline2:         [''],
       city:                 ['', Validators.required],
       state:                ['', Validators.required],
       Country:              [''],
-      PostalCode:           [''],
+      PostalCode:           ['',Validators.pattern(/^[0-9]{3} [0-9]{3}$/)],
 
       fathersname:          ['', Validators.required],
-      fathersmobileno:      [''],
+      fathersmobileno:      ['', Validators.pattern('^[0-9]{10}$')],
       mothersname:          ['', Validators.required],
-      mothersmobileno:      [''],
+      mothersmobileno:      ['', Validators.pattern('^[0-9]{10}$')],
       guardianname:         [''],
-      guardianno:           [''],
+      guardianno:           ['', Validators.pattern('^[0-9]{10}$')],
       relationship:         [''],
 
       course:               ['', Validators.required],
@@ -139,8 +235,8 @@ export class StudentmanagementComponent implements OnInit {
       admisiondate:         ['', Validators.required],
       admissontype:         ['', Validators.required],
 
-      AadhaarNumber:        [''],
-      PassportNumber:       [''],
+      AadhaarNumber:        ['', Validators.pattern('^[0-9 ]{14}$')],
+      PassportNumber:       ['', Validators.pattern('^[A-Z]{1}[0-9]{7}$')],
       GovtIDType:           [''],
       GovtIDNumber:         [''],
 
@@ -163,7 +259,33 @@ export class StudentmanagementComponent implements OnInit {
     });
   }
 
-  // ── ✅ UPDATED calcAge() — Age Validation integrated ─────────────────────────
+  // ── ✅ Year → Semester Dependent Dropdown Logic ──────────────────────────────
+  /**
+   * Call this on (change) of the Year dropdown in your HTML:
+   *   (change)="onYearChange($event)"
+   */
+  onYearChange(event: any): void {
+    const selectedYear = event?.target?.value || this.form.get('year')?.value;
+
+    // Reset semester field and available options
+    this.form.get('semester')?.setValue('');
+    this.availableSemesters = [];
+
+    if (selectedYear && this.semesterMap[selectedYear]) {
+      this.availableSemesters = this.semesterMap[selectedYear];
+    }
+  }
+
+  /**
+   * Call this when editing a student to pre-load the correct semester options
+   * based on the already-selected year value.
+   */
+  private loadSemestersForYear(year: string): void {
+    this.availableSemesters = this.semesterMap[year] ?? [];
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // ── ✅ Age Validation ────────────────────────────────────────────────────────
   calcAge() {
     const dob = this.form.get('DOB')?.value;
 
@@ -181,10 +303,8 @@ export class StudentmanagementComponent implements OnInit {
     const m = today.getMonth() - birth.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
 
-    // Auto-fill age field
     this.form.patchValue({ age: age < 0 ? 0 : age });
 
-    // ✅ Validate age >= 18
     if (age < 18) {
       this.ageError = `Age must be greater than 18. Current age is ${age}.`;
       this.isAgeValid = false;
@@ -221,10 +341,10 @@ export class StudentmanagementComponent implements OnInit {
 
   // ── Add Student ──────────────────────────────────────────────────────────────
   addstudent() {
-    // ✅ Age validation check — FIRST
+    // ✅ Age validation check
     if (!this.isAgeValid) {
       this.toastrservice.error('Student age must be greater than 18. Please check the Date of Birth.');
-      this.modalStep = 0; // go back to Personal Info step
+      this.modalStep = 0;
       return;
     }
 
@@ -329,44 +449,8 @@ export class StudentmanagementComponent implements OnInit {
     });
   }
 
-  addstud(requestobject: any) {
-    this.apiservice.addstudent(requestobject).subscribe((response) => {
-      if (response.isadded) {
-        this.toastrservice.success('Student Added Successfully');
-        this.closeModal();
-        this.form.reset();
-        this.modalStep = 0;
-        this.ngoncallers();
-      } else {
-        this.toastrservice.error('Failed to add', 'Please Try again');
-      }
-    });
-  }
-
-  // ── Courses & Departments ────────────────────────────────────────────────────
-  getcourses() {
-    this.apiservice.getcourse().subscribe((response: any[]) => {
-      this.courses = response.map((c: any) => ({
-        courseid:   c.courseid,
-        coursename: c.coursename
-      }));
-    });
-  }
-
   onStepClick(index: number) {
     if (index === 3) { this.getcourses(); }
-  }
-
-  getDepartments(event: any) {
-    const selectedCourseName = event.target.value;
-    const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
-    const courseId = selectedCourse?.courseid;
-    this.apiservice.getDepartments(courseId).subscribe((response: any[]) => {
-      this.departments = response.map((c: any) => ({
-        departmentid:   c.departmentid,
-        departmentname: c.departmentname
-      }));
-    });
   }
 
   // ── Filter ───────────────────────────────────────────────────────────────────
@@ -401,18 +485,29 @@ export class StudentmanagementComponent implements OnInit {
 
   // ── Modal controls ───────────────────────────────────────────────────────────
   openAddStudent() {
-    this.isEditing  = false;
-    this.formData   = {};
-    this.ageError   = '';        // ✅ reset age error
-    this.isAgeValid = false;     // ✅ reset age valid flag
+    this.isEditing        = false;
+    this.formData         = {};
+    this.ageError         = '';
+    this.isAgeValid       = false;
+    this.availableSemesters = [];   // ✅ reset semester options
     this.form.reset();
-    this.modalStep  = 0;
-    this.showModal  = true;
+    this.modalStep        = 0;
+    this.showModal        = true;
   }
 
   editStudent(student: any) {
     this.isEditing = true;
     this.formData  = { ...student };
+
+    const year = student.academicDetails?.year;
+
+    // ✅ Pre-load semester options for the student's saved year
+    if (year) {
+      this.loadSemestersForYear(year);
+    } else {
+      this.availableSemesters = [];
+    }
+
     this.form.patchValue({
       studentId:    student.personalInfo?.regNo,
       Firstname:    student.personalInfo?.firstName,
@@ -475,7 +570,6 @@ export class StudentmanagementComponent implements OnInit {
       previouspercentageorcgpa: student.identificationDetails?.previousPercentageOrCGPA,
     });
 
-    // ✅ Re-validate age when editing
     this.calcAge();
 
     this.modalStep = 0;
@@ -485,6 +579,63 @@ export class StudentmanagementComponent implements OnInit {
   viewStudent(student: any) {
     this.selectedStudent = student;
     this.showViewModal   = true;
+  }
+
+  closeModal() {
+    this.showModal          = false;
+    this.formData           = {};
+    this.ageError           = '';
+    this.isAgeValid         = false;
+    this.availableSemesters = [];   // ✅ reset semester options on close
+    this.form.reset();
+    this.modalStep          = 0;
+    this.regnoExists        = null;
+  }
+
+  closeViewModal() {
+    this.showViewModal   = false;
+    this.selectedStudent = null;
+  }
+
+  // ── API Calls ────────────────────────────────────────────────────────────────
+  GetTotalStudentsCount() {
+    this.apiservice.GetTotalStudentsCount().subscribe(response => {
+      this.totalstuentscount = response;
+      this.getpage();
+    });
+  }
+
+  getStudentsDetails() {
+    this.apiservice.getStudentsDetails().subscribe(response => {
+      this.students = response;
+    });
+  }
+
+  activestudecount() {
+    this.apiservice.activestudentscount().subscribe(response => {
+      this.activestudentscount = response;
+    });
+  }
+
+  GetTotalBoysandGirlscount() {
+    this.apiservice.GetTotalBoysandGirlscount().subscribe(response => {
+      this.boyscount  = response.boyscount;
+      this.girlscount = response.girlscount;
+    });
+  }
+
+  getcountnewmonth() {
+    this.apiservice.getcountnewmonth().subscribe(response => {
+      this.newmonthcount = response;
+    });
+  }
+
+  isregnouniqueornot() {
+    const value = this.form.get('studentId')?.value;
+    if (!value || value.trim() === '') { this.regnoExists = null; return; }
+    this.apiservice.isregnouniqueornot(value).subscribe(response => {
+      this.regnoExists = response;
+    });
   }
 
   deleteStudent(student: any) {
@@ -565,59 +716,38 @@ export class StudentmanagementComponent implements OnInit {
     });
   }
 
-  closeModal() {
-    this.showModal  = false;
-    this.formData   = {};
-    this.ageError   = '';        // ✅ reset on close
-    this.isAgeValid = false;     // ✅ reset on close
-    this.form.reset();
-    this.modalStep  = 0;
-    this.regnoExists = null;
-  }
-
-  closeViewModal() {
-    this.showViewModal   = false;
-    this.selectedStudent = null;
-  }
-
-  // ── API Calls ────────────────────────────────────────────────────────────────
-  GetTotalStudentsCount() {
-    this.apiservice.GetTotalStudentsCount().subscribe(response => {
-      this.totalstuentscount = response;
-      this.getpage();
+  getDepartments(event: any) {
+    const selectedCourseName = event.target.value;
+    const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
+    const courseId = selectedCourse?.courseid;
+    this.apiservice.getDepartments(courseId).subscribe((response: any[]) => {
+      this.departments = response.map((c: any) => ({
+        departmentid:   c.departmentid,
+        departmentname: c.departmentname
+      }));
     });
   }
 
-  getStudentsDetails() {
-    this.apiservice.getStudentsDetails().subscribe(response => {
-      this.students = response;
+  addstud(requestobject: any) {
+    this.apiservice.addstudent(requestobject).subscribe((response) => {
+      if (response.isadded) {
+        this.toastrservice.success('Student Added Successfully');
+        this.closeModal();
+        this.form.reset();
+        this.modalStep = 0;
+        this.ngoncallers();
+      } else {
+        this.toastrservice.error('Failed to add', 'Please Try again');
+      }
     });
   }
 
-  activestudecount() {
-    this.apiservice.activestudentscount().subscribe(response => {
-      this.activestudentscount = response;
-    });
-  }
-
-  GetTotalBoysandGirlscount() {
-    this.apiservice.GetTotalBoysandGirlscount().subscribe(response => {
-      this.boyscount  = response.boyscount;
-      this.girlscount = response.girlscount;
-    });
-  }
-
-  getcountnewmonth() {
-    this.apiservice.getcountnewmonth().subscribe(response => {
-      this.newmonthcount = response;
-    });
-  }
-
-  isregnouniqueornot() {
-    const value = this.form.get('studentId')?.value;
-    if (!value || value.trim() === '') { this.regnoExists = null; return; }
-    this.apiservice.isregnouniqueornot(value).subscribe(response => {
-      this.regnoExists = response;
+  getcourses() {
+    this.apiservice.getcourse().subscribe((response: any[]) => {
+      this.courses = response.map((c: any) => ({
+        courseid:   c.courseid,
+        coursename: c.coursename
+      }));
     });
   }
 }
