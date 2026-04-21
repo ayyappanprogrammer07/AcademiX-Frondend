@@ -37,6 +37,8 @@ export class StudentmanagementComponent implements OnInit {
 
   regnoExists: any = null;
 
+  isdraftmodalview=false
+
   formData: any = {};
 
   modalStep = 0;
@@ -319,7 +321,9 @@ export class StudentmanagementComponent implements OnInit {
 
   // ── Import Modal ─────────────────────────────────────────────────────────────
   openImportModal()  { this.showImportModal = true; }
-  closeImportModal() { this.showImportModal = false; this.importFileName = ''; this.importFile = null; }
+  closeImportModal() { 
+    this.showImportModal = false; this.importFileName = ''; this.importFile = null;
+   }
 
   onImportFileSelect(event: any) {
     const file = event.target.files[0];
@@ -348,7 +352,7 @@ export class StudentmanagementComponent implements OnInit {
       return;
     }
 
-    if (this.regnoExists === false) {
+    if (this.regnoExists === true) {
       this.toastrservice.error('Student ID already exists. Please use a different ID.');
       this.modalStep = 0;
       return;
@@ -580,16 +584,39 @@ export class StudentmanagementComponent implements OnInit {
     this.selectedStudent = student;
     this.showViewModal   = true;
   }
-
-  closeModal() {
+  closedraftModal()
+  {
+     this.isdraftmodalview=false;
+        this.closingmodal();
+  }
+  
+  saveDraft()
+  {
+    console.log('save as draft');
+    this.isdraftmodalview=false;
+    this.closingmodal();
+  }
+  closingmodal()
+  {
     this.showModal          = false;
     this.formData           = {};
     this.ageError           = '';
     this.isAgeValid         = false;
-    this.availableSemesters = [];   // ✅ reset semester options on close
+    this.availableSemesters = [];   
     this.form.reset();
     this.modalStep          = 0;
     this.regnoExists        = null;
+  }
+    //Insert Student modal
+  closeModal() {
+  if(this.isEditing)
+  {
+     this.closingmodal();
+  }
+  else
+  {
+    this.isdraftmodalview=true;
+  }
   }
 
   closeViewModal() {
