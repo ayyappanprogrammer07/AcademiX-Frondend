@@ -248,8 +248,8 @@
             <label>Student ID / Reg No <span class="req">*</span></label>
             <input type="text" placeholder="e.g. STU2024001" formControlName="studentId" (input)="isregnouniqueornot()"/>
             <small class="error" *ngIf="form.get('studentId')?.invalid && form.get('studentId')?.touched">Student ID is required.</small>
-            <small style="color:red;font-size:12px;"   *ngIf="regnoExists === false">⛔ Student ID already exists.</small>
-            <small style="color:green;font-size:12px;" *ngIf="regnoExists === true">✅ Student ID is available.</small>
+            <small style="color:red;font-size:12px;"   *ngIf="regnoExists === true"> Student ID already exists.</small>
+            <small style="color:green;font-size:12px;" *ngIf="regnoExists === false"> Student ID is available.</small>
           </div>
 
           <!-- First Name -->
@@ -844,11 +844,25 @@
         <a href="#" (click)="downloadTemplate($event)" style="color:#6366f1;">Download template</a>
       </p>
     </div>
-
     <div class="modal-footer">
       <button class="btn-secondary" (click)="closeImportModal()">Cancel</button>
       <div style="flex:1"></div>
       <button class="btn-primary" (click)="submitImport()" [disabled]="!importFileName">Upload & Import</button>
     </div>
+  </div>
+</div>
+
+<!-- Draft Modal -->
+<!-- Overlay -->
+<div id="draftModal" class="modal-overlay" *ngIf="isdraftmodalview">
+  <div class="modal-box">
+    <h2>Save as Draft?</h2>
+    <p>Do you want to save the student as draft?</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-no" (click)="closedraftModal()">No</button>
+      <button class="btn btn-yes" (click)="saveDraft()">Yes</button>
+    </div>
+
   </div>
 </div>
