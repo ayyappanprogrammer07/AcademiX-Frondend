@@ -4,6 +4,7 @@ import { CoreComponent } from './core.component';
 import { LoginComponent } from '../login/login.component';
 import { AdminmainComponent } from '../admin/adminmain/adminmain.component';
 import { StudentmanagementComponent } from '../admin/studentmanagement/studentmanagement.component'; 
+import { StaffmanagementComponent } from '../staffmanagement/staffmanagement.component';
 
 const routes: Routes = [
   {
@@ -17,7 +18,7 @@ const routes: Routes = [
         children: [
           { path: 'studentmanagement', component: StudentmanagementComponent },
           // add more child routes here later
-          // { path: 'staff', component: StaffComponent },
+          { path: 'staff', component: StaffmanagementComponent },
           // { path: 'fees', component: FeesComponent },
         ]
       }
