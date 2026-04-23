@@ -10,7 +10,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { StaffmanagementComponent } from './staffmanagement/staffmanagement.component';
+import { StaffmanagementComponent } from './admin/staffmanagement/staffmanagement.component';
+import { TransportmanagementComponent } from './admin/transportmanagement/transportmanagement.component';
+import { LibrarymanagementComponent } from './admin/librarymanagement/librarymanagement.component';
+import { EventmanagementComponent } from './admin/eventmanagement/eventmanagement.component';
+import { NoticeboardmanagementComponent } from './admin/noticeboardmanagement/noticeboardmanagement.component';
+import { ParentmanagementComponent } from './admin/parentmanagement/parentmanagement.component';
+import { HostelmanagementComponent } from './admin/hostelmanagement/hostelmanagement.component';
+import { FeemanagementComponent } from './admin/feemanagement/feemanagement.component';
+import { ExamandmarksmanagementComponent } from './admin/examandmarksmanagement/examandmarksmanagement.component';
+import { AttendacemanagementComponent } from './admin/attendacemanagement/attendacemanagement.component';
+import { TimetablemanagementComponent } from './admin/timetablemanagement/timetablemanagement.component';
+import { ClassandsectionmanagementComponent } from './admin/classandsectionmanagement/classandsectionmanagement.component';
+import { DepartmentandhodmanagementComponent } from './admin/departmentandhodmanagement/departmentandhodmanagement.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +31,19 @@ import { StaffmanagementComponent } from './staffmanagement/staffmanagement.comp
     AdminmainComponent,
     SidebarComponent,
     StaffmanagementComponent,
+    TransportmanagementComponent,
+    LibrarymanagementComponent,
+    EventmanagementComponent,
+    NoticeboardmanagementComponent,
+    ParentmanagementComponent,
+    HostelmanagementComponent,
+    FeemanagementComponent,
+    ExamandmarksmanagementComponent,
+    AttendacemanagementComponent,
+    TimetablemanagementComponent,
+    ClassandsectionmanagementComponent,
+    DepartmentandhodmanagementComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,

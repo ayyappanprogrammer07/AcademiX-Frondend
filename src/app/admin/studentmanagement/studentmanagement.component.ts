@@ -352,7 +352,7 @@ export class StudentmanagementComponent implements OnInit {
       return;
     }
 
-    if (this.regnoExists === true) {
+    if (this.regnoExists === false) {
       this.toastrservice.error('Student ID already exists. Please use a different ID.');
       this.modalStep = 0;
       return;
@@ -589,6 +589,10 @@ export class StudentmanagementComponent implements OnInit {
      this.isdraftmodalview=false;
         this.closingmodal();
   }
+  canceltheoption()
+  {
+    this.isdraftmodalview=false;
+  }
   
   saveDraft()
   {
@@ -607,7 +611,7 @@ export class StudentmanagementComponent implements OnInit {
     this.modalStep          = 0;
     this.regnoExists        = null;
   }
-    //Insert Student modal
+    //Insert Student 
   closeModal() {
   if(this.isEditing)
   {
@@ -659,9 +663,9 @@ export class StudentmanagementComponent implements OnInit {
 
   isregnouniqueornot() {
     const value = this.form.get('studentId')?.value;
-    if (!value || value.trim() === '') { this.regnoExists = null; return; }
+     if (!value || value.trim() === '') { this.regnoExists = null; return; }
     this.apiservice.isregnouniqueornot(value).subscribe(response => {
-      this.regnoExists = response;
+      this.regnoExists = response.isUnique;
     });
   }
 
@@ -777,4 +781,5 @@ export class StudentmanagementComponent implements OnInit {
       }));
     });
   }
+
 }

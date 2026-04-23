@@ -719,29 +719,33 @@
   margin-bottom: 20px;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
 
-.btn {
-  padding: 8px 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.btn-no {
-  background: #eee;
-}
-
-.btn-yes {
-  background: #7c3aed; /* purple */
-  color: white;
-}
 /* ================================================================================================================================================================== */
 input:focus {
   border-color: #7c3aed;
   box-shadow: 0 0 0 2px rgba(124,58,237,0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close-spacer {
+  width: 32px;   /* mirrors the X button width to keep title centered */
+  background: none;
+  border: none;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.modal-desc {
+  text-align: center;
+  color: #6b7280;
+  margin: 10px 0 20px;
 }
