@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :host {
   display: block;
   height: 100vh;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ── Sidebar Shell ── */
@@ -14,7 +14,8 @@
   height: 100vh;
   background: #F1F5F9;
   border-right: 1px solid #ede9fe;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: width;
   overflow: hidden;
 }
 
@@ -29,13 +30,22 @@
   gap: 10px;
   padding: 20px 16px;
   border-bottom: 1px solid #ede9fe;
+  min-height: 76px;
 }
 
-.logo-mark {
-  flex-shrink: 0;
+.logo {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -45,6 +55,25 @@
   color: #1e1033;
   letter-spacing: -0.3px;
   white-space: nowrap;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* ── KEY FIX: collapsed header layout ── */
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 20px 10px;
+  gap: 0;
+}
+
+.sidebar.collapsed .logo {
+  display: none;
+}
+
+.sidebar.collapsed .collapse-btn {
+  margin-left: 0 !important;
+  display: flex !important;
 }
 
 .collapse-btn {
@@ -162,6 +191,12 @@
   border-color: rgba(255,255,255,0.3);
 }
 
+/* Collapsed nav — center icons */
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 10px 0;
+}
+
 .nav-icon {
   flex-shrink: 0;
   display: flex;
@@ -201,6 +236,12 @@
   gap: 10px;
   padding: 14px 14px;
   border-top: 1px solid #ede9fe;
+}
+
+/* Collapsed footer — center avatar */
+.sidebar.collapsed .sidebar-footer {
+  justify-content: center;
+  padding: 14px 10px;
 }
 
 .user-avatar {

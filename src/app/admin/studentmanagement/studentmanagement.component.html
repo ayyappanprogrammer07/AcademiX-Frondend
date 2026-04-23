@@ -248,8 +248,8 @@
             <label>Student ID / Reg No <span class="req">*</span></label>
             <input type="text" placeholder="e.g. STU2024001" formControlName="studentId" (input)="isregnouniqueornot()"/>
             <small class="error" *ngIf="form.get('studentId')?.invalid && form.get('studentId')?.touched">Student ID is required.</small>
-            <small style="color:red;font-size:12px;"   *ngIf="regnoExists === true"> Student ID already exists.</small>
-            <small style="color:green;font-size:12px;" *ngIf="regnoExists === false"> Student ID is available.</small>
+            <small style="color:red;font-size:12px;"   *ngIf="regnoExists ===false"> Student ID already exists.</small>
+            <small style="color:green;font-size:12px;" *ngIf="regnoExists ===true"> Student ID is available.</small>
           </div>
 
           <!-- First Name -->
@@ -861,8 +861,10 @@
 
     <div class="modal-actions">
       <button class="btn btn-no" (click)="closedraftModal()">No</button>
+      <button class="btn btn-yes" (click)="canceltheoption()">Cancel</button>
       <button class="btn btn-yes" (click)="saveDraft()">Yes</button>
     </div>
 
   </div>
 </div>
+
