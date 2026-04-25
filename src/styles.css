@@ -4,3 +4,91 @@
 * {
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
+/* ── NG-Select Global Styles (styles.css) ── */
+
+/* Container */
+.ng-select.ng-select-single .ng-select-container {
+  height: 36px !important;
+  min-height: 36px !important;
+  font-size: 13px !important;
+  font-family: 'Sora', sans-serif !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+}
+
+/* Value container */
+.ng-select.ng-select-single .ng-select-container .ng-value-container {
+  padding-left: 12px !important;
+  align-items: center !important;
+}
+
+/* Selected value text */
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #1e1033 !important;
+  line-height: normal !important;
+}
+
+/* Placeholder */
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-placeholder {
+  font-size: 13px !important;
+  color: #999 !important;
+  font-family: 'Sora', sans-serif !important;
+}
+
+/* Search input inside */
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  top: auto !important;
+  padding-left: 0 !important;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input > input {
+  font-size: 13px !important;
+  font-family: 'Sora', sans-serif !important;
+}
+
+/* Arrow */
+.ng-select .ng-arrow-wrapper {
+  width: 24px !important;
+  padding-right: 8px !important;
+}
+.ng-select .ng-arrow-wrapper .ng-arrow {
+  border-width: 4px 4px 0 !important;
+}
+
+/* ── Dropdown Panel (renders outside component — MUST be global) ── */
+.ng-dropdown-panel {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 13px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1) !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  max-height: 180px !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  font-size: 13px !important;
+  font-family: 'Sora', sans-serif !important;
+  padding: 8px 12px !important;
+  min-height: unset !important;
+  height: 36px !important;
+  line-height: 20px !important;
+  color: #1e1033 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  background: #f5f3ff !important;
+  color: #7C3AED !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  background: #ede9fe !important;
+  color: #7C3AED !important;
+  font-weight: 600 !important;
+}

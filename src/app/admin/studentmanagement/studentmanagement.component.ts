@@ -43,10 +43,28 @@ export class StudentmanagementComponent implements OnInit {
 
   modalStep = 0;
   modalSteps = ['Personal Info', 'Contact Info', 'Parent / Guardian', 'Academic Details', 'Identification'];
+  importypes=['json','excel']
 
   avatarColors = ['#7C3AED', '#2563EB', '#059669', '#DC2626', '#D97706', '#db2777'];
 
   genders = ['Male', 'Female', 'Other'];
+  bloodgroups=['O+', 'B+', 'A+', 'AB+', 'O-', 'B-', 'A-', 'AB-'];
+  countries=['India']
+  communities =[
+  'OC (Open Category / General)',
+  'BC (Backward Class)',
+  'BCM (Backward Class Muslim)',
+  'MBC (Most Backward Class)',
+  'DNC (Denotified Communities)',
+  'SC (Scheduled Caste)',
+  'SCA (Scheduled Caste Arunthathiyar)',
+  'ST (Scheduled Tribe)'
+];
+states=['Tamilnadu'];
+Years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
+relations = ['Uncle', 'Aunt', 'Grandparent', 'Sibling', 'Other'];
+sections =['A','B','C','D']
+admissontypes =['Regular','Lateral Entry','Transfer'];
 
   pagesize = 5;
   totalPages: number = 0;
@@ -199,6 +217,7 @@ export class StudentmanagementComponent implements OnInit {
 
   formValidation() {
     this.form = this.formbuilder.group({
+
       studentId:            ['', Validators.required],
       Firstname:            ['', Validators.required],
       middlename:           [''],
@@ -336,7 +355,11 @@ export class StudentmanagementComponent implements OnInit {
     if (file) { this.importFile = file; this.importFileName = file.name; }
   }
 
-  downloadTemplate(event: Event) { event.preventDefault(); }
+  downloadTemplate() { 
+    console.log('File downloading succesuulyu')
+    console.log(this.form.value.importype)
+
+  }
 
   submitImport() {
     if (!this.importFile) return;
@@ -352,7 +375,7 @@ export class StudentmanagementComponent implements OnInit {
       return;
     }
 
-    if (this.regnoExists === false) {
+    if (this.regnoExists === true) {
       this.toastrservice.error('Student ID already exists. Please use a different ID.');
       this.modalStep = 0;
       return;
@@ -399,8 +422,8 @@ export class StudentmanagementComponent implements OnInit {
         relationship:        this.form.value.relationship
       },
       academicDetails: {
-        courseOrProgram: this.form.value.course,
-        department:      this.form.value.dept,
+        courseOrProgram: this.form.value.course?.coursename ?? this.form.value.course,
+        department:      this.form.value.dept?.departmentname ?? this.form.value.dept,
         year:            this.form.value.year,
         semester:        this.form.value.semester,
         section:         this.form.value.section,
@@ -430,7 +453,7 @@ export class StudentmanagementComponent implements OnInit {
         previousPercentageOrCGPA: this.form.value.previouspercentageorcgpa
       }
     };
-
+    console.log(requestobject)
     if (this.isEditing) {
       this.updateStudnet(requestobject);
     } else {
@@ -586,8 +609,8 @@ export class StudentmanagementComponent implements OnInit {
   }
   closedraftModal()
   {
-     this.isdraftmodalview=false;
-        this.closingmodal();
+    this.isdraftmodalview=false;
+    this.closingmodal();
   }
   canceltheoption()
   {
@@ -747,23 +770,25 @@ export class StudentmanagementComponent implements OnInit {
     });
   }
 
-  getDepartments(event: any) {
-    const selectedCourseName = event.target.value;
-    const selectedCourse = this.courses.find(c => c.coursename === selectedCourseName);
-    const courseId = selectedCourse?.courseid;
-    this.apiservice.getDepartments(courseId).subscribe((response: any[]) => {
-      this.departments = response.map((c: any) => ({
-        departmentid:   c.departmentid,
-        departmentname: c.departmentname
-      }));
-    });
-  }
+ getDepartments(selectedCourse: any) {
+  
+  if (!selectedCourse) return;
+
+  const courseId = selectedCourse.courseid; // ✅ directly from the object
+
+  this.apiservice.getDepartments(courseId).subscribe((response: any[]) => {
+    this.departments = response.map((c: any) => ({
+      departmentid: c.departmentid,
+      departmentname: c.departmentname
+    }));
+  });
+}
 
   addstud(requestobject: any) {
     this.apiservice.addstudent(requestobject).subscribe((response) => {
       if (response.isadded) {
         this.toastrservice.success('Student Added Successfully');
-        this.closeModal();
+        this.closingmodal();
         this.form.reset();
         this.modalStep = 0;
         this.ngoncallers();
