@@ -2,20 +2,51 @@
   <div class="card">
     <div class="card-header">
       <div class="logo-mark">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <circle cx="14" cy="14" r="14" fill="#7C3AED"/>
+        <svg width="100" height="100" viewBox="1 2 39 49" fill="none">
+          <image href="assets/Logo.png" x="2" y="1" width="40" height="50"/>
           <path d="M8 14L12 18L20 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <h1 class="title">Welcome back</h1>
+      <h1 class="title">Welcome  back  Acadmix</h1>
       <p class="subtitle">Sign in to your account</p>
     </div>
 
     <form [formGroup]="formgroup" (ngSubmit)="signin()">
+        <!-- Username -->
+      <div class="field-group">
+  <label class="label">Username</label>
 
+  <div class="input-wrapper">
+     <span class="input-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </span>
+    <input
+      type="text"
+      class="input"
+      placeholder="Enter your username"
+      formControlName="username"
+    />
+  </div>
 
-      <!-- Username -->
-      <div class="field-group" >
+  <!-- ✅ ERROR BELOW INPUT -->
+  <small class="error-text"
+    *ngIf="formgroup.get('username')?.touched && formgroup.get('username')?.invalid">
+
+    <span *ngIf="formgroup.get('username')?.errors?.['required']">
+      <b>Username is required</b>
+    </span>
+
+    <span *ngIf="formgroup.get('username')?.errors?.['minlength']">
+      Minimum 3 characters required
+    </span>
+
+  </small>
+</div>
+
+      
+      <!-- <div class="field-group" >
         <label class="label" for="username">Username</label>
         <div class="input-wrapper">
           <span class="input-icon">
@@ -32,10 +63,10 @@
             formControlName="username"
           />
         </div>
-      </div>
+      </div> -->
 
       <!-- User Type -->
-      <div class="field-group" style="margin-top: 20px;">
+      <!-- <div class="field-group" style="margin-top: 20px;">
         <label class="label" for="usertype">User Type</label>
         <div class="input-wrapper select-wrapper">
           <span class="input-icon">
@@ -60,36 +91,57 @@
           </span>
         </div>
         
-      </div>
+      </div> -->
 
       <!-- Password -->
-      <div class="field-group"  style="margin-top: 20px;" >
-        <label class="label" for="password">Password</label>
-        <div class="input-wrapper">
-          <span class="input-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </span>
-          <input
-            id="password"
-            name="password"
-            [type]="showPassword ? 'text' : 'password'"
-            class="input"
-            placeholder="Enter your password"
-            formControlName="password"
-          />
-          <button type="button" class="toggle-btn" (click)="togglePassword()" aria-label="Toggle password visibility">
-            <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-            <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-              <line x1="1" y1="1" x2="23" y2="23"/>
-            </svg>
-          </button>
-        </div>
-      </div>
+     <div class="field-group" style="margin-top: 20px;">
+  <label class="label" for="password">Password</label>
+
+  <div class="input-wrapper">
+    <span class="input-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </span>
+
+    <input
+      id="password"
+      name="password"
+      [type]="showPassword ? 'text' : 'password'"
+      class="input"
+      placeholder="Enter your password"
+      formControlName="password"
+    />
+
+    <button type="button"
+            class="toggle-btn"
+            (click)="togglePassword()">
+      <svg *ngIf="!showPassword" width="16" height="16">...</svg>
+      <svg *ngIf="showPassword" width="16" height="16">...</svg>
+    </button>
+  </div>
+
+  <!-- 🔴 ERROR MESSAGE -->
+  <div class="error-text"
+       *ngIf="formgroup.get('password')?.touched && formgroup.get('password')?.invalid">
+
+    <small *ngIf="formgroup.get('password')?.errors?.['required']">
+      <b>Password is required</b>
+    </small>
+
+    <small *ngIf="formgroup.get('password')?.errors?.['minlength']">
+      Minimum 6 characters required
+    </small>
+
+    <small *ngIf="formgroup.get('password')?.errors?.['pattern']">
+      Must contain 1 uppercase, 1 number
+    </small>
+
+  </div>
+</div>
 
       <div class="forgot-row"  style="margin-top: 20px;">
         <a href="#" class="forgot-link">Forgot password?</a>
