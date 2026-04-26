@@ -23,6 +23,7 @@ import { AttendacemanagementComponent } from './admin/attendacemanagement/attend
 import { TimetablemanagementComponent } from './admin/timetablemanagement/timetablemanagement.component';
 import { ClassandsectionmanagementComponent } from './admin/classandsectionmanagement/classandsectionmanagement.component';
 import { DepartmentandhodmanagementComponent } from './admin/departmentandhodmanagement/departmentandhodmanagement.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
     HttpClientModule  ,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    MatPaginatorModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
       timeOut: 3000,

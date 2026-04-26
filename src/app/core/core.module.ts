@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { StudentmanagementComponent } from '../admin/studentmanagement/studentmanagement.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatPaginatorModule } from '@angular/material/paginator';
 @NgModule({
   declarations: [
     CoreComponent,
@@ -17,7 +18,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     CoreRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    MatPaginatorModule
   ]
 })
 export class CoreModule { }
