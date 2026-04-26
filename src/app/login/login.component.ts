@@ -18,13 +18,11 @@ export class LoginComponent {
   {
     this.formgroup=this.formbuilder.group({
       'username':['',Validators.required],
-      'usertype':['',Validators.required],
       'password':['',Validators.required]
   })
   }
 
   
-
   togglePassword()
   {
     this.showPassword = !this.showPassword;

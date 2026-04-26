@@ -25,12 +25,12 @@ export class ApiService {
     return this.httpclient.post(url,data);
   }
 
-  public getStudentsDetails()
+  public getStudentsDetails(data:any)
   {
     let baseurl =environment.baseUrl;
     let url =`${baseurl}academix/studentmanagement/GetStudentDetails`
     console.log(url);
-    return this.httpclient.get<any[]>(url);
+    return this.httpclient.post<any[]>(url,data);
   }
 
   public getcourse()

@@ -285,7 +285,7 @@
     <div class="pagination">
       <div class="page-size-selector">
         <label>Rows per page:</label>
-        <select [(ngModel)]="pagesize" (change)="onCountChange()">
+        <select (change)="onCountChange()">
           <option [value]="5">5</option>
           <option [value]="10">10</option>
           <option [value]="15">15</option>
@@ -788,3 +788,63 @@
     <button class="btn btn-ghost" (click)="canceltheoption()">Cancel — continue editing</button>
   </div>
 </div>
+
+
+<!-- Delete Modal -->
+  <div class="modal-overlay-delete" *ngIf="isdeleltepopupopen">
+    <div class="modal-delete">
+
+      <!-- Close button -->
+      <button class="close-btn-delete" onclick="closeModal()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M1 1l10 10M11 1L1 11" stroke="#888" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Icon -->
+      <div class="icon-wrapper-del">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 6l-1 14a1 1 0 01-1 1H7a1 1 0 01-1-1L5 6" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 11v5M14 11v5" stroke="#A32D2D" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h2 class="modal-title-del">Delete Student?</h2>
+
+      <!-- Description -->
+      <p class="modal-desc-del">
+        Are you sure you want to delete<br/>
+        <span class="student-name-del">Ayyappan</span>
+        <span class="student-id-del">ICODEX363</span>
+        ?
+      </p>
+
+      <!-- Warning banner -->
+      <div class="warning-banner-del">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;">
+          <circle cx="8" cy="8" r="7" stroke="#A32D2D" stroke-width="1.4"/>
+          <path d="M8 5v3.5M8 10.5v.5" stroke="#A32D2D" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span>This action is permanent and cannot be undone.</span>
+      </div>
+
+      <!-- Buttons -->
+      <div class="modal-actions-del">
+        <button class="btn-cancel-del" onclick="closeModal()">Cancel</button>
+        <button class="btn-delete-del" onclick="confirmDelete()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a1 1 0 01-1 1H7a1 1 0 01-1-1L5 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Yes, Delete
+        </button>
+      </div>
+
+      <!-- Soft cancel link -->
+      <p class="soft-cancel-del" onclick="closeModal()">Cancel — keep student</p>
+
+    </div>
+  </div>
+

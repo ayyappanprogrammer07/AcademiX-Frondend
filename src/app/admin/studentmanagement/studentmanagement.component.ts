@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../../services/api.service';
-import Swal from 'sweetalert2';
-
+import { PageEvent } from '@angular/material/paginator'; 
 @Component({
   selector: 'app-studentmanagement',
   templateUrl: './studentmanagement.component.html',
@@ -40,6 +39,7 @@ export class StudentmanagementComponent implements OnInit {
   isdraftmodalview=false
 
   formData: any = {};
+  isdeleltepopupopen=false;
 
   modalStep = 0;
   modalSteps = ['Personal Info', 'Contact Info', 'Parent / Guardian', 'Academic Details', 'Identification'];
@@ -137,6 +137,14 @@ admissontypes =['Regular','Lateral Entry','Transfer'];
     this.GetTotalBoysandGirlscount();
     this.getcountnewmonth();
     this.onCountChange();
+    this.getpaginationData()
+  }
+  getpaginationData()
+  {
+    const res = this.totalstuentscount/this.pagesize;
+    console.log(this.totalstuentscount)
+    console.log(this.pagesize);
+    console.log(Math.ceil(res));
   }
 
   // ── ADD STUDENT LOGICS ───────────────────────────────────────────────────────
@@ -201,8 +209,11 @@ admissontypes =['Regular','Lateral Entry','Transfer'];
   }
 
   onCountChange() {
-    console.log(this.pagesize);
     this.getpage();
+    this.getStudentsDetails();
+    this.getpaginationData();
+  }
+  onPageChange(event: PageEvent) {
   }
 
   getpage() {
@@ -656,11 +667,15 @@ admissontypes =['Regular','Lateral Entry','Transfer'];
     this.apiservice.GetTotalStudentsCount().subscribe(response => {
       this.totalstuentscount = response;
       this.getpage();
+      this.getpaginationData();
     });
   }
 
   getStudentsDetails() {
-    this.apiservice.getStudentsDetails().subscribe(response => {
+    const requestobject= {
+  "pagesize": this.pagesize,
+  "pageno": 1}
+    this.apiservice.getStudentsDetails(requestobject).subscribe(response => {
       this.students = response;
     });
   }
@@ -693,81 +708,7 @@ admissontypes =['Regular','Lateral Entry','Transfer'];
   }
 
   deleteStudent(student: any) {
-    const regNo = student.personalInfo.regNo;
-    const name = [
-      student.personalInfo.firstName,
-      student.personalInfo.middlename,
-      student.personalInfo.lastname
-    ].filter(part => part && part.trim() !== '').join(' ');
-
-    Swal.fire({
-      title: 'Delete Student?',
-      html: `Are you sure you want to delete <br><b>${name}</b> (${regNo})?<br><span style="color:#ef4444;font-size:13px;">This action cannot be undone.</span>`,
-      iconHtml: '🗑️',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Delete',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        popup: 'academix-popup',
-        title: 'academix-title',
-        htmlContainer: 'academix-html',
-        confirmButton: 'academix-confirm-btn',
-        cancelButton: 'academix-cancel-btn',
-        icon: 'academix-icon'
-      },
-      buttonsStyling: false
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.apiservice.deleteStudent(regNo).subscribe({
-          next: (response) => {
-            if (response == true) {
-              Swal.fire({
-                iconHtml: '✓',
-                title: 'Deleted Successfully!',
-                text: `${name} has been removed.`,
-                customClass: {
-                  popup: 'academix-popup',
-                  title: 'academix-title',
-                  confirmButton: 'academix-confirm-btn',
-                  icon: 'academix-icon-success'
-                },
-                buttonsStyling: false,
-                timer: 2500,
-                showConfirmButton: false
-              });
-              this.ngoncallers();
-            } else {
-              Swal.fire({
-                iconHtml: '✕',
-                title: 'Delete Failed',
-                text: 'Could not delete student. Please try again.',
-                customClass: {
-                  popup: 'academix-popup',
-                  title: 'academix-title',
-                  confirmButton: 'academix-confirm-btn',
-                  icon: 'academix-icon-error'
-                },
-                buttonsStyling: false
-              });
-            }
-          },
-          error: () => {
-            Swal.fire({
-              iconHtml: '✕',
-              title: 'Error!',
-              text: 'Something went wrong. Please try again.',
-              customClass: {
-                popup: 'academix-popup',
-                title: 'academix-title',
-                confirmButton: 'academix-confirm-btn',
-                icon: 'academix-icon-error'
-              },
-              buttonsStyling: false
-            });
-          }
-        });
-      }
-    });
+    this.isdeleltepopupopen=true
   }
 
  getDepartments(selectedCourse: any) {
